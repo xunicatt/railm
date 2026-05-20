@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/train.dart';
+import 'package:railm/pages/train_home.dart';
 
 void main() {
     runApp(const App());
@@ -18,8 +18,8 @@ class _App extends State<App> {
         return MaterialApp(
             theme: .dark(),
             debugShowCheckedModeBanner: false,
-            home: Scaffold(
-                body: const TrainPage(),
+            home: const Scaffold(
+                body: TrainHomePage(),
             ),
         );
     }
