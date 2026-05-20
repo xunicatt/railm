@@ -7,6 +7,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"railapi/internals/app"
 )
 
