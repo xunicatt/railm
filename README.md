@@ -4,4 +4,7 @@ railm (Railway Mobile), pronounced ‘realm,’ is a cross-platform mobile app p
 
 # Project Structure
 - railapi: backend for Railm app written in Go
-- railm: Mobile App written in Flutter (WIP)
+- railm: Mobile App written in Flutter
+
+# Binaries
+Checkout **Releases* to download prebuilt binaries.

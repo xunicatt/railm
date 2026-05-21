@@ -19,3 +19,6 @@ flutter run
 # or
 flutter run -d <device>
 ```
+
+## Install
+Download the prebuilt apk from the **Release** and install it.
