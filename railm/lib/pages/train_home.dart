@@ -9,6 +9,7 @@ import 'package:railm/models/station.dart';
 import 'package:railm/models/train.dart';
 import 'package:railm/pages/train_live_status.dart';
 import 'package:railm/pages/trains_between_stations.dart';
+import 'package:localstore/localstore.dart';
 
 class TrainHomePage extends StatefulWidget {
     const TrainHomePage({super.key});
@@ -20,9 +21,25 @@ class TrainHomePage extends StatefulWidget {
 class _TrainHomePage extends State<TrainHomePage> {
     bool loading = true;
     List<Station> stations = [];
+    final db = Localstore.getInstance(useSupportDir: true);
 
     Future<void> loadStations() async {
-        final data = await Station.fetchStations();
+        final collections = await db.collection("stations").get();
+        List<Station> data = [];
+
+        if (collections != null) {
+            collections.forEach((_, v) {
+                data.add(Station.fromMap(v));
+            });
+        } else {
+            data = await Station.fetchStations();
+            for (final d in data) {
+                db.collection("stations")
+                    .doc(d.id)
+                    .set(d.toMap());
+            }
+        }
+
         setState(() {
             stations = data;
             loading = false;

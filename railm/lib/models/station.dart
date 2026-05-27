@@ -30,6 +30,24 @@ class Station {
         );
     }
 
+    factory Station.fromMap(Map<String, dynamic> data) {
+        return Station(
+            id: data["id"],
+            name: data["name"],
+            route: data["route"],
+            position: data["position"],
+        );
+    }
+
+    Map<String, dynamic> toMap() {
+        return {
+            "id": id,
+            "name": name,
+            "route": route,
+            "position": position,
+        };
+    }
+
     static Future<List<String>> fetchIds() async {
         final String url = "${Configs.baseUrl}/stations";
         var response = await http.get(Uri.parse(url));
