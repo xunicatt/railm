@@ -104,7 +104,7 @@ class Train {
     }
 
     static Future<Train?> fetchTrain(String number) async {
-        final String url = "${Configs.baseUrl}/trains/$number";
+        final String url = "${Configs.baseUrl}/trains/$number?auth=${Configs.token}";
         final response = await http.get(Uri.parse(url));
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         if (json.containsKey("status") && json["status"] == "failed") {
@@ -118,7 +118,7 @@ class Train {
         String src,
         String dest,
     ) async {
-        final String url = "${Configs.baseUrl}/trains/between/$src/$dest";
+        final String url = "${Configs.baseUrl}/trains/between/$src/$dest?auth=${Configs.token}";
         final response = await http.get(Uri.parse(url));
         return List<String>.from(jsonDecode(response.body));
     }
@@ -133,7 +133,7 @@ class Train {
         );
 
         final futures = numbers.map((number) async {
-            final resp = await http.get(Uri.parse("$url/$number"));
+            final resp = await http.get(Uri.parse("$url/$number?auth=${Configs.token}"));
             final data = jsonDecode(resp.body);
             return Train.fromJson(data);
         });

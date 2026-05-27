@@ -49,7 +49,7 @@ class Station {
     }
 
     static Future<List<String>> fetchIds() async {
-        final String url = "${Configs.baseUrl}/stations";
+        final String url = "${Configs.baseUrl}/stations?auth=${Configs.token}";
         var response = await http.get(Uri.parse(url));
         return List<String>.from(jsonDecode(response.body));
     }
@@ -59,7 +59,7 @@ class Station {
         final ids = await fetchIds();
 
         final futures = ids.map((id) async {
-            final resp = await http.get(Uri.parse("$url/$id"));
+            final resp = await http.get(Uri.parse("$url/$id?auth=${Configs.token}"));
             final data = jsonDecode(resp.body);
             return Station.fromJson(data);
         });
