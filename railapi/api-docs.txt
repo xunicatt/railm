@@ -1,8 +1,12 @@
 # Docs for endpoints
 
 -------------------
-|  Version: 0.1   |
+|  Version: 0.2   |
 -------------------
+
+Note:
+** All endpoints requires an auth token. **
+Examples - <url>/trains?auth=<token>, <url>/stations/<id>?auth=<token>
 
 Definitions:
 - fail-succes:
