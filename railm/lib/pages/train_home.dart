@@ -24,13 +24,11 @@ class _TrainHomePage extends State<TrainHomePage> {
     final db = Localstore.getInstance(useSupportDir: true);
 
     Future<void> loadStations() async {
-        final collections = await db.collection("stations").get();
         List<Station> data = [];
 
+        final collections = await db.collection("stations").get();
         if (collections != null) {
-            collections.forEach((_, v) {
-                data.add(Station.fromMap(v));
-            });
+            collections.forEach((_, v) => data.add(Station.fromMap(v)));
         } else {
             data = await Station.fetchStations();
             for (final d in data) {

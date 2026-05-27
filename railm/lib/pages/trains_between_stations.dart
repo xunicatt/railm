@@ -8,6 +8,7 @@ import 'package:railm/components/loading.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/train.dart';
 import 'package:railm/pages/train_live_status.dart';
+import 'package:localstore/localstore.dart';
 
 class TrainListPage extends StatefulWidget {
     final List<Station> stations;
@@ -28,6 +29,7 @@ class TrainListPage extends StatefulWidget {
 class _TrainListPage extends State<TrainListPage> {
     List<Train> trains = [];
     bool loading = true;
+    final db = Localstore.getInstance(useSupportDir: true);
 
     @override
     void initState() {
@@ -36,10 +38,42 @@ class _TrainListPage extends State<TrainListPage> {
     }
 
     Future<void> loadTrains() async {
-        final data = await Train.fetchTrainsBetweenStations(
-            widget.srcStation.id,
-            widget.destStation.id,
-        );
+        List<Train> data = [];
+
+        final trainNumbersCollection = await db.collection(
+            "${widget.srcStation.id}-${widget.destStation.id}",
+        ).get();
+        final trainsCollection = await db.collection("trains").get();
+
+        if (trainNumbersCollection != null && trainsCollection != null) {
+            trainNumbersCollection.forEach((_, value) { 
+                    final number = value["number"];
+                    final id = "/trains/$number";
+                    data.add(Train.fromMap(trainsCollection[id]));
+            });
+        } else {
+            data = await Train.fetchTrainsBetweenStations(
+                widget.srcStation.id,
+                widget.destStation.id,
+            );
+
+            for (final d in data) {
+                db.collection(
+                    "${widget.srcStation.id}-${widget.destStation.id}",
+                ).doc(d.number).set({
+                    "number": d.number,
+                });
+
+                if (trainsCollection != null && trainsCollection.containsKey(d.number)) {
+                    continue;
+                }
+
+                db.collection("trains")
+                    .doc(d.number)
+                    .set(d.toMap());
+            }
+        }
+
         setState(() {
             trains = data;
             loading = false;
