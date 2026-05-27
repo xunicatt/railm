@@ -28,6 +28,24 @@ class TrainStop {
             departure: json["departure"],
         );
     }
+
+    factory TrainStop.fromMap(Map<String, dynamic> map) {
+        return TrainStop(
+            station: map["station"],
+            route: map["route"],
+            arrival: map["arrival"],
+            departure: map["departure"],
+        );
+    }
+
+    Map<String, dynamic> toMap() {
+        return {
+            "station": station,
+            "route": route,
+            "arrival": arrival,
+            "departure": departure,
+        };
+    }
 }
 
 class Train {
@@ -57,6 +75,32 @@ class Train {
             end: json["end"],
             stops: stops,
         );
+    }
+
+    factory Train.fromMap(Map<String, dynamic> data) {
+        final stops = (data["stops"] as List<dynamic>).map(
+            (e) => TrainStop.fromMap(e)
+        ).toList();
+
+        return Train(
+            number: data["number"],
+            name: data["name"],
+            start: data["start"],
+            end: data["end"],
+            stops: stops,
+        );
+    }
+
+    Map<String, dynamic> toMap() {
+        final stopsMap = stops.map((e) => e.toMap()).toList();
+
+        return {
+            "number": number,
+            "name": name,
+            "start": start,
+            "end": end,
+            "stops": stopsMap,
+        };
     }
 
     static Future<Train?> fetchTrain(String number) async {

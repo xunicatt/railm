@@ -5,8 +5,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:railm/pages/train_home.dart';
+import 'package:localstore/localstore.dart';
 
 void main() {
+    WidgetsFlutterBinding.ensureInitialized();
     runApp(const App());
 }
 
