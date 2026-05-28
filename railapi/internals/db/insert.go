@@ -142,3 +142,20 @@ func InsertStatus(db *sql.DB, status *models.Status) error {
 
 	return nil
 }
+
+func InsertToken(db *sql.DB, token string) error {
+	_, err := db.Exec(
+		`INSERT INTO tokens(
+			token
+		) VALUES (?1);`,
+		token,
+	)
+	if err != nil {
+		return fmt.Errorf(
+			"failed to insert into 'token' table: %v",
+			err.Error(),
+		)
+	}
+
+	return nil
+}

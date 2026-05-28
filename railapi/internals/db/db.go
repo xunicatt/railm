@@ -35,10 +35,18 @@ func Init(sql *sql.DB) error {
 		)
 	}
 
-	err = CreateStatusTable(sql)
+	err = createStatusTable(sql)
 	if err != nil {
 		return fmt.Errorf(
 			"failed to create 'status' table: %v",
+			err.Error(),
+		)
+	}
+
+	err = createTokenTable(sql)
+	if err != nil {
+		return fmt.Errorf(
+			"failed to create 'token' table: %v",
 			err.Error(),
 		)
 	}

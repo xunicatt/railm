@@ -5,5 +5,6 @@
 
 class Configs {
     // yup that is my PCs ip
-    static const String baseUrl = "https://railm-railapi.vercel.app";
+    static const String baseUrl = String.fromEnvironment("URL");
+    static const token = String.fromEnvironment("TOKEN");
 }

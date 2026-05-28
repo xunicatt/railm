@@ -63,7 +63,7 @@ func createTrainTable(sql *sql.DB) error {
 	return err
 }
 
-func CreateStatusTable(sql *sql.DB) error {
+func createStatusTable(sql *sql.DB) error {
 	_, err := sql.Exec(
 		`CREATE TABLE IF NOT EXISTS status(
 			number TEXT PRIMARY KEY NOT NULL,
@@ -72,6 +72,15 @@ func CreateStatusTable(sql *sql.DB) error {
 
 			FOREIGN KEY(number) REFERENCES train(number),
 			FOREIGN KEY(station) REFERENCES station(id)
+		);`,
+	)
+	return err
+}
+
+func createTokenTable(sql *sql.DB) error {
+	_, err := sql.Exec(
+		`CREATE TABLE IF NOT EXISTS tokens(
+			token TEXT PRIMARY KEY NOT NULL
 		);`,
 	)
 	return err

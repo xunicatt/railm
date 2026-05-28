@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 // Author: xunicatt
-// Project: railm (railapi) 
+// Project: railm (railapi)
 // Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
 
 package app
@@ -13,6 +13,7 @@ import (
 	"railapi/api"
 	"railapi/internals/db"
 	"railapi/internals/rank"
+	"railapi/internals/token"
 
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
@@ -20,7 +21,7 @@ import (
 type App struct {
 	port string
 	ctx *api.Context
-	mux *http.ServeMux
+	handler http.Handler
 }
 
 func NewApp(url string, port string, threshold uint) (*App, error) {
@@ -36,6 +37,14 @@ func NewApp(url string, port string, threshold uint) (*App, error) {
 	if err != nil {
 		return nil, fmt.Errorf(
 			"failed to initialize database: %v",
+			err.Error(),
+		)
+	}
+
+	err = token.Init(sql)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"failed to initialize token: %v",
 			err.Error(),
 		)
 	}
@@ -62,10 +71,12 @@ func NewApp(url string, port string, threshold uint) (*App, error) {
 
 	rank.Init(threshold)
 
+	handler := api.AuthMiddleware(mux)
+
 	a := &App{
 		port: port,
 		ctx: ctx,
-		mux: mux,
+		handler: handler,
 	}
 
 	return a, nil
@@ -80,6 +91,6 @@ func (a *App) Run() error {
 
 	return http.ListenAndServe(
 		":" + a.port,
-		a.mux,
+		a.handler,
 	)
 }

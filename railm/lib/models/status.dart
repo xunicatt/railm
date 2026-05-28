@@ -33,7 +33,7 @@ class Status {
     }
 
     static Future<Status?> fetchStatus(String number) async {
-        final String url = "${Configs.baseUrl}/status/$number";
+        final String url = "${Configs.baseUrl}/status/$number?auth=${Configs.token}";
         var response = await http.get(Uri.parse(url));
         var data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -46,7 +46,7 @@ class Status {
     }
 
     static Future<bool> updateStatus(String trainNumber, String stationId) async {
-        final String url = "${Configs.baseUrl}/status/$trainNumber/$stationId";
+        final String url = "${Configs.baseUrl}/status/$trainNumber/$stationId?auth=${Configs.token}";
         var response = await http.post(Uri.parse(url));
         var data = jsonDecode(response.body) as Map<String, dynamic>;
 

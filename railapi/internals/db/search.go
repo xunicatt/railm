@@ -375,3 +375,32 @@ func GetStatus(db *sql.DB, number string) (*models.Status, error) {
 
 	return status, nil
 }
+
+func GetTokens(db *sql.DB) ([]string, error) {
+	rows, err := db.Query(
+		`SELECT token FROM tokens;`,
+	)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"failed to query 'token' table: %v",
+			err.Error(),
+		)
+	}
+	defer rows.Close()
+
+	tokens := []string{}
+	for rows.Next() {
+		token := ""
+		err = rows.Scan(&token)
+		if err != nil {
+			return nil, fmt.Errorf(
+				"failed to scan row from 'token' table: %v",
+				err.Error(),
+			)
+		}
+
+		tokens = append(tokens, token)
+	}
+
+	return tokens, nil
+}
