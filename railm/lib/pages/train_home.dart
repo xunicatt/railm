@@ -7,12 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:railm/components/loading.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/train.dart';
+import 'package:railm/pages/settings.dart';
 import 'package:railm/pages/train_live_status.dart';
 import 'package:railm/pages/trains_between_stations.dart';
 import 'package:localstore/localstore.dart';
 
 class TrainHomePage extends StatefulWidget {
-    const TrainHomePage({super.key});
+    final ValueChanged<ThemeMode> onThemeChanged;
+
+    const TrainHomePage({super.key, required this.onThemeChanged});
 
     @override
     State<StatefulWidget> createState() => _TrainHomePage();
@@ -84,24 +87,49 @@ class _TrainHomePage extends State<TrainHomePage> {
             return Loading();
         }
 
-        return Center(
-            child: Padding(
-                padding: .all(20),
-                child: Column(
-                    mainAxisAlignment: .center,
-                    crossAxisAlignment: .center,
-                    mainAxisSize: .max,
-                    spacing: 30,
-                    children: [
-                        LiveTrainCard(
-                            onSearchPressed: searchTrain,
-                        ),
-                        FindTrainsCard(
-                            stations: stations
-                        ),
-                    ]
+        return Column(
+            mainAxisAlignment: .start,
+            crossAxisAlignment: .end,
+            children: [
+                Padding(
+                    padding: .only(right: 10),
+                    child: IconButton(
+                        icon: Icon(Icons.settings),
+                        onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => Settings(
+                                        onThemeChanged: widget.onThemeChanged,
+                                    ),
+                                ),
+                            );
+                        },
+                    ),
                 ),
-            )
+                Expanded(
+                    child: 
+                    Center(
+                        child: Padding(
+                            padding: .all(20),
+                            child: Column(
+                                mainAxisAlignment: .center,
+                                crossAxisAlignment: .center,
+                                mainAxisSize: .max,
+                                spacing: 30,
+                                children: [
+                                    LiveTrainCard(
+                                        onSearchPressed: searchTrain,
+                                    ),
+                                    FindTrainsCard(
+                                        stations: stations
+                                    ),
+                                ]
+                            ),
+                        ),
+                    ),
+                ),
+            ],
         );
     }
 }

@@ -40,30 +40,30 @@ class _TrainListPage extends State<TrainListPage> {
     Future<void> loadTrains() async {
         List<Train> data = [];
 
-        final trainNumbersCollection = await db.collection(
-            "${widget.srcStation.id}-${widget.destStation.id}",
-        ).get();
+        final trainNumbersCollection = await db.collection("trains-between",)
+            .doc("${widget.srcStation.id}-${widget.destStation.id}").get();
         final trainsCollection = await db.collection("trains").get();
 
         if (trainNumbersCollection != null && trainsCollection != null) {
-            trainNumbersCollection.forEach((_, value) { 
-                    final number = value["number"];
-                    final id = "/trains/$number";
-                    data.add(Train.fromMap(trainsCollection[id]));
-            });
+            List<String> numbers = (trainNumbersCollection["numbers"] as List<dynamic>).cast();
+            for (final number in numbers) {
+                final id = "/trains/$number";
+                data.add(Train.fromMap(trainsCollection[id]));
+            }
         } else {
             data = await Train.fetchTrainsBetweenStations(
                 widget.srcStation.id,
                 widget.destStation.id,
             );
 
-            for (final d in data) {
-                db.collection(
-                    "${widget.srcStation.id}-${widget.destStation.id}",
-                ).doc(d.number).set({
-                    "number": d.number,
+            db.collection("trains-between")
+                .doc("${widget.srcStation.id}-${widget.destStation.id}")
+                .set({
+                    "numbers": data.map((e) => e.number).toList(),
                 });
 
+
+            for (final d in data) {
                 if (trainsCollection != null && trainsCollection.containsKey(d.number)) {
                     continue;
                 }
