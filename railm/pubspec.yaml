@@ -37,6 +37,7 @@ dependencies:
   http: ^1.6.0
   flutter_launcher_icons: ^0.14.4
   localstore: ^1.4.0
+  mapbox_maps_flutter: ^2.24.3
 
 dev_dependencies:
   flutter_test:

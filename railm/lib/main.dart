@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:railm/pages/train_home.dart';
 import 'package:localstore/localstore.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 void main() {
     WidgetsFlutterBinding.ensureInitialized();
