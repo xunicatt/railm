@@ -7,4 +7,4 @@ railm (Railway Mobile), pronounced ‘realm,’ is a cross-platform mobile app p
 - railm: Mobile App written in Flutter
 
 # Binaries
-Checkout **Releases* to download prebuilt binaries.
+Checkout **Releases** to download prebuilt binaries.
