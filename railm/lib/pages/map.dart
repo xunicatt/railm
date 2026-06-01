@@ -55,8 +55,10 @@ class MapViewState extends State<MapView> {
         final resp = await http.get(Uri.parse(url));
         final data = jsonDecode(resp.body);
         
-        final routes = data['routes'] as List<dynamic>;
-        await drawRoute(routes, _selectedRouted);
+        setState(() {
+            _routes = data['routes'] as List<dynamic>;
+        });
+        await drawRoute(_routes, _selectedRouted);
     }
 
     Future<void> drawRoute(List<dynamic> routes, int selected) async {
@@ -101,30 +103,71 @@ class MapViewState extends State<MapView> {
 
         return Container(
             padding: .all(10),
-            height: 300,
             child: Card(
                 clipBehavior: .hardEdge,
-                child: MapWidget(
-                    key: ValueKey("map"),
-                    cameraOptions: CameraOptions(
-                        center: .new(
-                            coordinates: .new(_longitude!, _latitude!),
-                        ),
-                        zoom: 13,
-                    ),
-                    onMapCreated: (map) async {
-                        _map = map;
-                        await _map?.location.updateSettings(
-                            LocationComponentSettings(
-                                enabled: true,
-                                pulsingEnabled: true,
+                child: Column(
+                    mainAxisSize: .min,
+                    children: [
+                        SizedBox(
+                            height: 300,
+                            child: MapWidget(
+                                key: ValueKey("map"),
+                                cameraOptions: CameraOptions(
+                                    center: .new(
+                                        coordinates: .new(_longitude!, _latitude!),
+                                    ),
+                                    zoom: 13,
+                                ),
+                                onMapCreated: (map) async {
+                                    _map = map;
+                                    await _map?.location.updateSettings(
+                                        LocationComponentSettings(
+                                            enabled: true,
+                                            pulsingEnabled: true,
+                                        ),
+                                    );
+                                },
+                                onTapListener: (data) {
+                                    final cord = data.point.coordinates;
+                                    fetchRoutes(cord.lng, cord.lat);
+                                },
                             ),
-                        );
-                    },
-                    onTapListener: (data) {
-                        final cord = data.point.coordinates;
-                        fetchRoutes(cord.lng, cord.lat);
-                    },
+                        ),
+                        _routes.isEmpty ?
+                        SizedBox.shrink() :
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _routes.length,
+                            padding: .zero,
+                            itemBuilder: (_, index) {
+                                final route = _routes[index];
+                                final distanceKm = route['distance'] / 1000;
+                                final etaMinutes = route['duration'] / 60;
+
+                                return ListTile(
+                                    title: Text(
+                                        '${distanceKm.toStringAsFixed(1)} km',
+                                    ),
+                                    subtitle: Text(
+                                        '${etaMinutes.toStringAsFixed(0)} min',
+                                    ),
+                                    selected: index == _selectedRouted,
+                                    selectedColor: Colors.blue,
+                                    onTap: () async {
+                                        if (index == _selectedRouted) {
+                                            return;
+                                        }
+
+                                        setState(() {
+                                            _selectedRouted = index;
+                                        });
+
+                                        await drawRoute(_routes, _selectedRouted);
+                                    }
+                                );
+                            },
+                        ),
+                    ],
                 ),
             ),
         );
