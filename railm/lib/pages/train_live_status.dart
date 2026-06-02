@@ -38,16 +38,13 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                     padding: .all(10),
                     child: Column(
                         mainAxisAlignment: .start,
-                        crossAxisAlignment: .center,
+                        crossAxisAlignment: .start,
                         children: [
                             TrainLiveStatusHeading(
                                 trainNumber: widget.train.number,
                                 trainName: widget.train.name,
-                                value: _liveMode,
-                                onChanged: (x) {
-                                    setState(() { _liveMode = x; });
-                                }
                             ),
+                            SizedBox(height: 10),
                             Expanded(
                                 child: TrainStopsList(
                                     trainNumber: widget.train.number,
@@ -55,6 +52,53 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                                     stations: widget.stations,
                                     isLiveMode: _liveMode,
                                 ),
+                            ),
+                            widget.mapData == null ?
+                            SizedBox.shrink() :
+                            SizedBox(height: 10),
+                            widget.mapData == null ?
+                            SizedBox.shrink() : 
+                            Row(
+                                mainAxisAlignment: .spaceBetween,
+                                children: [
+                                    Row(
+                                        children: [
+                                            IconButton.filled(
+                                                icon: Icon(
+                                                    Icons.insights,
+                                                ),
+                                                style: .new(
+                                                    backgroundColor: .all<Color>(Colors.blueGrey),
+                                                ),
+                                                onPressed: () {},
+                                            ),
+                                            Text(
+                                                'Status',
+                                                style: .new(
+                                                    color: Colors.grey,
+                                                ),
+                                            ),
+                                        ],
+                                    ),
+                                    Row(
+                                        children: [
+                                            Padding(
+                                                padding: .only(left: 10),
+                                                child: Text(
+                                                    'Live Mode',
+                                                    style: .new(
+                                                        color: Colors.grey,
+                                                    ),
+                                                ),
+                                            ),
+                                            Switch(
+                                                activeThumbColor: Colors.blueGrey,
+                                                value: _liveMode,
+                                                onChanged: (x) => setState(() { _liveMode = x; }),
+                                            ),
+                                        ],
+                                    ),
+                                ],
                             ),
                         ], 
                     ),
@@ -67,21 +111,16 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
 class TrainLiveStatusHeading extends StatelessWidget {
     final String trainNumber;
     final String trainName;
-    final ValueChanged<bool> onChanged;
-    final bool value;
 
     const TrainLiveStatusHeading({
         super.key,
         required this.trainName,
         required this.trainNumber,
-        required this.onChanged,
-        required this.value,
     });
 
     @override
     Widget build(BuildContext context) {
         return Column(
-            mainAxisAlignment: .start,
             crossAxisAlignment: .start,
             children: [
                 Padding(
@@ -94,44 +133,21 @@ class TrainLiveStatusHeading extends StatelessWidget {
                         )
                     ),
                 ),
-                Row(
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                        Padding(
-                            padding: .only(left: 10),
-                            child: Container(
-                                padding: .symmetric(horizontal: 8),
-                                decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: .all(.circular(4)),
-                                ),
-                                child: Text(
-                                    trainNumber,
-                                    style: .new(
-                                        color: Colors.white,
-                                    ),
-                                ),
+                Padding(
+                    padding: .only(left: 10),
+                    child: Container(
+                        padding: .symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: .all(.circular(4)),
+                        ),
+                        child: Text(
+                            trainNumber,
+                            style: .new(
+                                color: Colors.white,
                             ),
                         ),
-                        Row(
-                            children: [
-                                Padding(
-                                    padding: .only(left: 10),
-                                    child: Text(
-                                        'Live Mode',
-                                        style: .new(
-                                            color: Colors.grey,
-                                        ),
-                                    ),
-                                ),
-                                Switch(
-                                    activeThumbColor: Colors.blue,
-                                    value: value,
-                                    onChanged: onChanged,
-                                ),
-                            ],
-                        ),
-                    ],
+                    ),
                 ),
             ],
         );
