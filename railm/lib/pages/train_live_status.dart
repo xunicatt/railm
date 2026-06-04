@@ -50,13 +50,14 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                 if (mapData != null && _travelTimeMins != null) {
                     final routesTrafficData = await MapView.fetchRoute(
                             'driving-traffic',
-                            mapData.clientLng,
-                            mapData.clientLat,
-                            mapData.stationLng,
-                            mapData.stationLat,
+                            mapData.lng1,
+                            mapData.lat1,
+                            mapData.lng2,
+                            mapData.lat2,
                         );
 
-                    final selectedRouteTrafficData = routesTrafficData['routes'][mapData.selectedRoute];
+                    final routes = routesTrafficData['routes'];
+                    final selectedRouteTrafficData = routes[mapData.route];
                     final trafficDelay = (selectedRouteTrafficData['duration'] / 60).floor() - _travelTimeMins;
 
                     setState(() {
@@ -87,6 +88,12 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
         );
     }
 
+    @override
+    void dispose() {
+        super.dispose();
+        _timer?.cancel();
+    }
+
     void _setTrainDelay(Status status) {
         final srcStationId = widget.srcStationId;
         if (srcStationId == null) {
@@ -95,7 +102,7 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
 
         String? trainDelay;
         num trainDelayMins;
-        (trainDelayMins, trainDelay) = _computeDelay(srcStationId, status);
+        (trainDelayMins, trainDelay) = _computeTrainDelay(srcStationId, status);
         setState(() {
             _trainDelay = trainDelay;
             _trainDelayMins = trainDelayMins;
@@ -107,23 +114,18 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
         if (mapData != null) {
             final routesTravelData = await MapView.fetchRoute(
                 'driving',
-                mapData.clientLng,
-                mapData.clientLat,
-                mapData.stationLng,
-                mapData.stationLat,
+                mapData.lng1,
+                mapData.lat1,
+                mapData.lng2,
+                mapData.lat2,
             );
-            final selectedRouteTravelData = routesTravelData['routes'][mapData.selectedRoute];
+            final routes =routesTravelData['routes'];
+            final selectedRouteTravelData = routes[mapData.route];
 
             setState(() {
                 _travelTimeMins = (selectedRouteTravelData['duration'] / 60).floor();
             });
         }
-    }
-
-    @override
-    void dispose() {
-        super.dispose();
-        _timer?.cancel();
     }
 
     VoidCallback? _getOnTap(String stationId) {
@@ -156,6 +158,24 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
     }
 
     Widget _getStatusView() {
+        num expectedDelay = 0;
+
+        var travelTime = "Unknown";
+        if (_travelTimeMins != null) {
+            travelTime = "$_travelTimeMins mins";
+            expectedDelay += _travelTimeMins!;
+        }
+
+        var traficDelay = "Unknown";
+        if (_trafficDelayMins != null) {
+            traficDelay = "$_trafficDelayMins mins";
+            expectedDelay += _trafficDelayMins!;
+        }
+
+        if (_trainDelayMins != null) {
+            expectedDelay += _trainDelayMins!; 
+        }
+
         return StatusView(
             children: [
                 StatusViewRow(
@@ -166,9 +186,7 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                         ),
                         StatusViewCard(
                             heading: 'Route Delay',
-                            text: _travelTimeMins == null ? 
-                                "Unknown" : 
-                                "$_travelTimeMins mins",
+                            text: travelTime,
                         ),
                     ]
                 ),
@@ -176,19 +194,15 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                     children: [
                         StatusViewCard(
                             heading: 'Traffic Delay',
-                            text: _trafficDelayMins == null ?
-                                "Unknown" :
-                                "$_trafficDelayMins mins",
+                            text: traficDelay,
                         ),
                         StatusViewCard(
                             heading: 'Expected Delay',
-                            text: _travelTimeMins == null || _trafficDelayMins == null || _trainDelayMins == null ?
-                                "Unknown" :
-                                "${_travelTimeMins! + _trafficDelayMins! + _trainDelayMins!} mins",
+                            text: "$expectedDelay mins",
                         ),
                     ]
                 ),
-            ]
+            ],
         );
     }
 
@@ -200,7 +214,7 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
         return hrs * 60 + mins;
     }
 
-    (num, String) _computeDelay(String srcStationId, Status status) {
+    (num, String) _computeTrainDelay(String srcStationId, Status status) {
         String currStationId = status.station;
         int currStationPos = widget.train.stops.indexWhere(
             (s) => s.station == currStationId
@@ -222,10 +236,9 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
         if (arrivalRaw == "--:--") {
             arrivalRaw = widget.train.stops[currStationPos].departure;
         }
-        final arrival = _toMinutes(arrivalRaw);
 
+        final arrival = _toMinutes(arrivalRaw);
         final lastUpdated = _toMinutes(status.time);
-        
         final diff = lastUpdated - arrival;
 
         if (diff <= 0) {
@@ -338,7 +351,7 @@ class StatusView extends StatelessWidget {
             alignment: .topCenter,
             child: Flex(
                 direction: .vertical,
-                crossAxisAlignment: .start,
+                crossAxisAlignment: .center,
                 mainAxisAlignment: .start,
                 mainAxisSize: .min,
                 children: [

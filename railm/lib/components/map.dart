@@ -13,18 +13,18 @@ import 'package:railm/configs/configs.dart';
 import 'package:http/http.dart' as http;
 
 class MapData {
-    final num stationLng;
-    final num stationLat;
-    final num clientLng;
-    final num clientLat;
-    final int selectedRoute;
+    final num lng1;
+    final num lat1;
+    final num lng2;
+    final num lat2;
+    final int route;
 
     const MapData({
-        required this.stationLng,
-        required this.stationLat,
-        required this.clientLng,
-        required this.clientLat,
-        required this.selectedRoute,
+        required this.lng1,
+        required this.lat1,
+        required this.lng2,
+        required this.lat2,
+        required this.route,
     });
 }
 
@@ -62,10 +62,10 @@ class MapView extends StatefulWidget {
 }
 
 class MapViewState extends State<MapView> {
-    num? _latitude;
-    num? _longitude;
-    num? _destLong;
-    num? _destLat;
+    num? _lng1;
+    num? _lat1;
+    num? _lng2;
+    num? _lat2;
     MapboxMap? _map;
     int _selectedRouted = 0;
     List<dynamic> _routes = [];
@@ -90,8 +90,8 @@ class MapViewState extends State<MapView> {
 
         final pos = await _gl.getCurrentPosition();
         setState(() {
-            _latitude = pos.latitude;
-            _longitude = pos.longitude;
+            _lng1 = pos.longitude;
+            _lat1 = pos.latitude;
         });
 
         final stationLocation = await _db.collection("station-locations")
@@ -100,28 +100,35 @@ class MapViewState extends State<MapView> {
 
         if (stationLocation != null) {
             setState(() {
-                _destLat = stationLocation['lat'];
-                _destLong = stationLocation['long'];
+                _lng2 = stationLocation['long'];
+                _lat2 = stationLocation['lat'];
             });
 
-            await _fetchRoutes(_destLong!, _destLat!);
+            await _fetchRoutes(_lng2!, _lat2!);
         }
     }
 
-    Future<void> _fetchRoutes(num longitude, num latitude) async {
+    Future<void> _fetchRoutes(num lng, num lat) async {
         final data = await MapView.fetchRoute(
-            'driving', _longitude!,
-            _latitude!, longitude, latitude,
+            'driving', 
+            _lng1!, _lat1!,
+            lng, lat,
         );
 
         setState(() {
             _routes = data['routes'] as List<dynamic>;
         });
+
         await _drawRoute(_routes, _selectedRouted);
     }
 
     Future<void> _drawRoute(List<dynamic> routes, int selected) async {
-        final style = _map!.style;
+        final map = _map;
+        if (map == null) {
+            return;
+        }
+
+        final style = map.style;
 
         for (int i = 0; i < routes.length; i++) {
             final route = routes[i];
@@ -155,7 +162,7 @@ class MapViewState extends State<MapView> {
 
     @override
     Widget build(BuildContext context) {
-        if (_latitude == null || _longitude == null) {
+        if (_lng1 == null || _lat1 == null) {
             return Loading();
         }
 
@@ -167,7 +174,7 @@ class MapViewState extends State<MapView> {
                 mainAxisSize: .min,
                 children: [
                     Text(
-                        'Select the source station',
+                        'Select the station',
                         style: .new(
                             fontSize: 22,
                             fontWeight: .w500,
@@ -187,7 +194,7 @@ class MapViewState extends State<MapView> {
                                 MapboxStyles.STANDARD,
                             cameraOptions: CameraOptions(
                                 center: .new(
-                                    coordinates: .new(_longitude!, _latitude!),
+                                    coordinates: .new(_lng1!, _lat1!),
                                 ),
                                 zoom: 13,
                             ),
@@ -208,10 +215,12 @@ class MapViewState extends State<MapView> {
                                         'lat': cord.lat,
                                         'long': cord.lng,
                                     });
+
                                 setState(() {
-                                    _destLat = cord.lat;
-                                    _destLong = cord.lng;
+                                    _lng2 = cord.lng;
+                                    _lat2 = cord.lat;
                                 });
+
                                 await _fetchRoutes(cord.lng, cord.lat);
                             },
                         ),
@@ -259,16 +268,16 @@ class MapViewState extends State<MapView> {
                         shape: RoundedRectangleBorder(
                             borderRadius: .all(.circular(10)),
                         ),
-                        onPressed: _destLat == null && _destLat == null ? 
+                        onPressed: _lng2 == null || _lat2 == null ? 
                             null : (){
                                 Navigator.pop(context);
                                 widget.onConfirmedClicked(
                                     MapData(
-                                        stationLng: _destLong!,
-                                        stationLat: _destLat!,
-                                        clientLng: _longitude!,
-                                        clientLat: _latitude!,
-                                        selectedRoute: _selectedRouted,
+                                        lng1: _lng1!,
+                                        lat1: _lat1!,
+                                        lng2: _lng2!,
+                                        lat2: _lat2!,
+                                        route: _selectedRouted,
                                     ),
                                 );
                             },
