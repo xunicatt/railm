@@ -17,12 +17,22 @@ open -a Simulator # iOS
 flutter devices
 
 # then run with
-flutter run --dart-define=TOKEN=<token> --dart-define=URL="https://railm-railapi.vercel.app"
+flutter run \
+    --dart-define=TOKEN=<token> \
+    --dart-define=URL="https://railm-railapi.vercel.app" \
+    --dart-define=MAPBOX_TOKEN=<token>
 # or
-flutter run --dart-define=TOKEN=<token> --dart-define=URL="https://railm-railapi.vercel.app" -d <device>
+flutter run \
+    --dart-define=TOKEN=<token> \
+    --dart-define=URL="https://railm-railapi.vercel.app" \
+    --dart-define=MAPBOX_TOKEN=<token>
+    -d <device>
 
 # Build
-flutter build apk --release --dart-define=TOKEN=<token> --dart-define=URL="https://railm-railapi.vercel.app"
+flutter build apk --release \
+    --dart-define=TOKEN=<token> \
+    --dart-define=URL="https://railm-railapi.vercel.app" \
+    --dart-define=MAPBOX_TOKEN=<token>
 ```
 
 ## Install

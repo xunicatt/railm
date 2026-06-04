@@ -7,28 +7,22 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:railm/configs/configs.dart';
 
-class TrainStatus {
-    static const running = 0;
-    static const arrived = 1;
-    static const left = 2;
-}
-
 class Status {
     final String number;
     final String station;
-    final int state;
+    final String time;
 
     const Status({
         required this.number,
         required this.station,
-        required this.state,
+        required this.time,
     });
 
     factory Status.fromJson(Map<String, dynamic> json) {
         return Status(
             number: json["number"],
             station: json["station"],
-            state: json["state"],
+            time: json["time"],
         );
     }
 
@@ -45,8 +39,8 @@ class Status {
         return Status.fromJson(data);
     }
 
-    static Future<bool> updateStatus(String trainNumber, String stationId) async {
-        final String url = "${Configs.baseUrl}/status/$trainNumber/$stationId?auth=${Configs.token}";
+    static Future<bool> updateStatus(String trainNumber, String stationId, String time) async {
+        final String url = "${Configs.baseUrl}/status/$trainNumber/$stationId?auth=${Configs.token}&time=$time";
         var response = await http.post(Uri.parse(url));
         var data = jsonDecode(response.body) as Map<String, dynamic>;
 

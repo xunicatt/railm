@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:railm/components/loading.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/train.dart';
+import 'package:railm/components/map.dart';
 import 'package:railm/pages/settings.dart';
 import 'package:railm/pages/train_live_status.dart';
 import 'package:railm/pages/trains_between_stations.dart';
@@ -23,7 +24,7 @@ class TrainHomePage extends StatefulWidget {
 
 class TrainHomePageState extends State<TrainHomePage> {
     bool _loading = true;
-    List<Station> _stations = [];
+    Map<String, Station> _stations = {};
     final _db = Localstore.getInstance(useSupportDir: true);
 
     @override
@@ -33,18 +34,25 @@ class TrainHomePageState extends State<TrainHomePage> {
     }
 
     Future<void> _loadStations() async {
-        List<Station> data = [];
+        Map<String, Station> data = {};
 
         final collections = await _db.collection("stations").get();
         if (collections != null) {
-            collections.forEach((_, v) => data.add(Station.fromMap(v)));
+            collections.forEach((_, v) {
+                final s = Station.fromMap(v);
+                data[s.id] = s;
+            });
         } else {
-            data = await Station.fetchStations();
-            for (final d in data) {
-                _db.collection("stations")
-                    .doc(d.id)
-                    .set(d.toMap());
+            final stations = await Station.fetchStations();
+            for (final s in stations) {
+                data[s.id] = s;
             }
+
+             data.forEach((id, s) {
+                _db.collection("stations")
+                    .doc(id)
+                    .set(s.toMap());
+            });
         }
 
         setState(() {
@@ -194,7 +202,7 @@ class LiveTrainCardNumberField extends StatefulWidget {
 
 class LiveTrainCardNumberFieldState extends State<LiveTrainCardNumberField> {
     String? _value;
-    TextEditingController _controller = .new();
+    final TextEditingController _controller = .new();
 
     Future<void> onSearchPressed() async {
         final res = await widget.onSearchPressed(_value);
@@ -230,7 +238,7 @@ class LiveTrainCardNumberFieldState extends State<LiveTrainCardNumberField> {
 }
 
 class FindTrainsCard extends StatefulWidget {
-    final List<Station> stations;
+    final Map<String, Station> stations;
 
     const FindTrainsCard({super.key, required this.stations});
 
@@ -250,24 +258,31 @@ class FindTrainsCardState extends State<FindTrainsCard> {
             return null;
         }
 
-        final srcStation = widget.stations.firstWhere(
-            (s) => s.id == _src!,
-        );
-
-        final destStation = widget.stations.firstWhere(
-            (s) => s.id == _dest!,
-        );
-
         return () {
-            Navigator.push<void>(
-                context,
-                MaterialPageRoute<void>(
-                    builder: (context) => TrainListPage(
-                        srcStation: srcStation,
-                        destStation: destStation,
-                        stations: widget.stations,
-                    ),
-                ),
+            showModalBottomSheet(
+                context: context, 
+                isScrollControlled: true,
+                enableDrag: false,
+                builder: (_) {
+                    return MapView(
+                        // TODO: pass down the data to show
+                        // data and cache it
+                        srcStationId: _src!,
+                        onConfirmedClicked: (data) {
+                            Navigator.push<void>(
+                                context,
+                                MaterialPageRoute<void>(
+                                    builder: (context) => TrainListPage(
+                                        srcStation: widget.stations[_src]!,
+                                        destStation: widget.stations[_dest]!,
+                                        stations: widget.stations,
+                                        mapData: data,
+                                    ),
+                                ),
+                            );
+                        }
+                    );
+                },
             );
         };
     }
@@ -293,10 +308,10 @@ class FindTrainsCardState extends State<FindTrainsCard> {
                                 });
                             },
                             focusNode: _fromFocus,
-                            entries: widget.stations.map((station) {
+                            entries: widget.stations.entries.map((station) {
                                 return DropdownMenuEntry(
-                                    value: station.id,
-                                    label: '${station.name} (${station.id.toUpperCase()})',
+                                    value: station.key,
+                                    label: '${station.value.name} (${station.value.id.toUpperCase()})',
                                 );
                             }).toList(), 
                         ),
@@ -309,10 +324,10 @@ class FindTrainsCardState extends State<FindTrainsCard> {
                                 });
                             },
                             focusNode: _toFocus,
-                            entries: widget.stations.map((station) {
+                            entries: widget.stations.entries.map((station) {
                                 return DropdownMenuEntry(
-                                    value: station.id,
-                                    label: '${station.name} (${station.id.toUpperCase()})',
+                                    value: station.key,
+                                    label: '${station.value.name} (${station.value.id.toUpperCase()})',
                                 );
                             }).toList(), 
                         ),

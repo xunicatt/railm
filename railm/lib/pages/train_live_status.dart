@@ -5,18 +5,23 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:railm/components/map.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/status.dart';
 import 'package:railm/models/train.dart';
 
 class TrainLiveStatusPage extends StatefulWidget {
     final Train train;
-    final List<Station> stations;
+    final Map<String, Station> stations;
+    final MapData? mapData;
+    final String? srcStationId;
 
     const TrainLiveStatusPage({
         super.key,
         required this.train,
         required this.stations,
+        this.srcStationId,
+        this.mapData,
     });
 
     @override
@@ -25,6 +30,223 @@ class TrainLiveStatusPage extends StatefulWidget {
 
 class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
     bool _liveMode = false;
+    Status? _status;
+    Timer? _timer;
+
+    String? _trainDelay;
+    num? _trainDelayMins;
+    num? _travelTimeMins;
+    num? _trafficDelayMins;
+
+    @override
+    void initState() {
+        super.initState();
+        _fetchRoutesTravelTime();
+
+        _timer = Timer.periodic(
+            Duration(seconds: 2),
+            (_) async {
+                final mapData = widget.mapData;
+                if (mapData != null && _travelTimeMins != null) {
+                    final routesTrafficData = await MapView.fetchRoute(
+                            'driving-traffic',
+                            mapData.lng1,
+                            mapData.lat1,
+                            mapData.lng2,
+                            mapData.lat2,
+                        );
+
+                    final routes = routesTrafficData['routes'];
+                    final selectedRouteTrafficData = routes[mapData.route];
+                    final trafficDelay = (selectedRouteTrafficData['duration'] / 60).floor() - _travelTimeMins;
+
+                    setState(() {
+                        _trafficDelayMins = trafficDelay;
+                    });
+                }
+
+                if (_liveMode) {
+                    if (_status != null) {
+                        _setTrainDelay(_status!);
+                    }
+                }
+
+                final data = await Status.fetchStatus(widget.train.number);
+
+                if (!mounted) {
+                    return;
+                }
+
+                setState(() {
+                    _status = data;
+                });
+
+                if (data != null) {
+                    _setTrainDelay(data);
+                }
+            }
+        );
+    }
+
+    @override
+    void dispose() {
+        super.dispose();
+        _timer?.cancel();
+    }
+
+    void _setTrainDelay(Status status) {
+        final srcStationId = widget.srcStationId;
+        if (srcStationId == null) {
+            return;
+        }
+
+        String? trainDelay;
+        num trainDelayMins;
+        (trainDelayMins, trainDelay) = _computeTrainDelay(srcStationId, status);
+        setState(() {
+            _trainDelay = trainDelay;
+            _trainDelayMins = trainDelayMins;
+        });
+    }
+
+    Future<void> _fetchRoutesTravelTime() async {
+        final mapData = widget.mapData;
+        if (mapData != null) {
+            final routesTravelData = await MapView.fetchRoute(
+                'driving',
+                mapData.lng1,
+                mapData.lat1,
+                mapData.lng2,
+                mapData.lat2,
+            );
+            final routes =routesTravelData['routes'];
+            final selectedRouteTravelData = routes[mapData.route];
+
+            setState(() {
+                _travelTimeMins = (selectedRouteTravelData['duration'] / 60).floor();
+            });
+        }
+    }
+
+    VoidCallback? _getOnTap(String stationId) {
+        if (!_liveMode) {
+            return null;
+        }
+
+        return () {
+            // TODO: improve error handling
+            // for update failure
+            setState(() {
+                _status = Status(
+                    number: widget.train.number,
+                    station: stationId,
+                    time: _timeNow(),
+                );
+            });
+
+            Status.updateStatus(
+                widget.train.number,
+                stationId,
+                _timeNow(),
+            );
+        };
+    }
+
+    String _timeNow() {
+        final now = DateTime.now();
+        return "${now.hour}:${now.minute}";
+    }
+
+    Widget _getStatusView() {
+        num expectedDelay = 0;
+
+        var travelTime = "Unknown";
+        if (_travelTimeMins != null) {
+            travelTime = "$_travelTimeMins mins";
+            expectedDelay += _travelTimeMins!;
+        }
+
+        var traficDelay = "Unknown";
+        if (_trafficDelayMins != null) {
+            traficDelay = "$_trafficDelayMins mins";
+            expectedDelay += _trafficDelayMins!;
+        }
+
+        if (_trainDelayMins != null) {
+            expectedDelay += _trainDelayMins!; 
+        }
+
+        return StatusView(
+            children: [
+                StatusViewRow(
+                    children: [
+                        StatusViewCard(
+                            heading: 'Train Delay',
+                            text: _trainDelay ?? "Unknown",
+                        ),
+                        StatusViewCard(
+                            heading: 'Route Delay',
+                            text: travelTime,
+                        ),
+                    ]
+                ),
+                StatusViewRow(
+                    children: [
+                        StatusViewCard(
+                            heading: 'Traffic Delay',
+                            text: traficDelay,
+                        ),
+                        StatusViewCard(
+                            heading: 'Expected Delay',
+                            text: "$expectedDelay mins",
+                        ),
+                    ]
+                ),
+            ],
+        );
+    }
+
+    int _toMinutes(String s) {
+        final [hrsRaw, minsRaw] = s.split(":");
+        final hrs = int.parse(hrsRaw);
+        final mins = int.parse(minsRaw);
+
+        return hrs * 60 + mins;
+    }
+
+    (num, String) _computeTrainDelay(String srcStationId, Status status) {
+        String currStationId = status.station;
+        int currStationPos = widget.train.stops.indexWhere(
+            (s) => s.station == currStationId
+        );
+
+        int srcStationPos = widget.train.stops.indexWhere(
+            (s) => s.station == srcStationId 
+        );
+
+        if (currStationPos == srcStationPos) {
+            return (0, "Arrived");
+        }
+
+        if (currStationPos > srcStationPos) {
+            return (0, "Left");
+        }
+
+        var arrivalRaw = widget.train.stops[currStationPos].arrival;
+        if (arrivalRaw == "--:--") {
+            arrivalRaw = widget.train.stops[currStationPos].departure;
+        }
+
+        final arrival = _toMinutes(arrivalRaw);
+        final lastUpdated = _toMinutes(status.time);
+        final diff = lastUpdated - arrival;
+
+        if (diff <= 0) {
+            return (0, "Ontime");
+        }
+
+        return (diff, "$diff mins");
+    }
 
     @override
     Widget build(BuildContext context) {
@@ -35,25 +257,161 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                     padding: .all(10),
                     child: Column(
                         mainAxisAlignment: .start,
-                        crossAxisAlignment: .center,
+                        crossAxisAlignment: .start,
                         children: [
                             TrainLiveStatusHeading(
                                 trainNumber: widget.train.number,
                                 trainName: widget.train.name,
-                                value: _liveMode,
-                                onChanged: (x) {
-                                    setState(() { _liveMode = x; });
-                                }
                             ),
+                            SizedBox(height: 10),
                             Expanded(
                                 child: TrainStopsList(
                                     trainNumber: widget.train.number,
                                     stops: widget.train.stops,
                                     stations: widget.stations,
                                     isLiveMode: _liveMode,
+                                    status: _status,
+                                    onTap: _getOnTap,
                                 ),
                             ),
+                            widget.mapData == null ?
+                            SizedBox.shrink() :
+                            SizedBox(height: 10),
+                            widget.mapData == null ?
+                            SizedBox.shrink() : 
+                            Row(
+                                mainAxisAlignment: .spaceBetween,
+                                children: [
+                                    Row(
+                                        children: [
+                                            IconButton.filled(
+                                                icon: Icon(
+                                                    Icons.insights,
+                                                ),
+                                                style: .new(
+                                                    backgroundColor: .all<Color>(Colors.blue),
+                                                ),
+                                                onPressed: () => {
+                                                    showModalBottomSheet(
+                                                        context: context,
+                                                        useSafeArea: true,
+                                                        builder: (_) => _getStatusView(),
+                                                    ),
+                                                },
+                                            ),
+                                            Text(
+                                                'Status',
+                                                style: .new(
+                                                    color: Colors.grey,
+                                                ),
+                                            ),
+                                        ],
+                                    ),
+                                    Row(
+                                        children: [
+                                            Padding(
+                                                padding: .only(left: 10),
+                                                child: Text(
+                                                    'Live Mode',
+                                                    style: .new(
+                                                        color: Colors.grey,
+                                                    ),
+                                                ),
+                                            ),
+                                            Switch(
+                                                activeThumbColor: Colors.blue,
+                                                value: _liveMode,
+                                                onChanged: (x) => setState(() { _liveMode = x; }),
+                                            ),
+                                        ],
+                                    ),
+                                ],
+                            ),
                         ], 
+                    ),
+                ),
+            ),
+        );
+    }
+}
+
+class StatusView extends StatelessWidget {
+    final List<Widget> children;
+
+    const StatusView({
+        super.key,
+        required this.children,
+    });
+
+    @override
+    Widget build(BuildContext context) {
+        return Padding(
+            padding: .all(20),
+            child: Flex(
+                direction: .vertical,
+                crossAxisAlignment: .center,
+                mainAxisAlignment: .start,
+                mainAxisSize: .min,
+                children: [
+                    Text(
+                        'Status',
+                        style: .new(
+                            fontSize: 26,
+                            fontWeight: .w800,
+                        ),
+                    ),
+                    SizedBox(height: 20),
+                    ...children,
+                ],
+            ),
+        );
+    }
+}
+
+class StatusViewRow extends StatelessWidget {
+    final List<Widget> children;
+
+    const StatusViewRow({super.key, required this.children});
+
+    @override
+    Widget build(BuildContext context) {
+        return Flex(
+            direction: .horizontal,
+            children: children,
+        );
+    }
+}
+
+class StatusViewCard extends StatelessWidget {
+    final String heading;
+    final String text;
+
+    const StatusViewCard({
+        super.key,
+        required this.heading,
+        required this.text,
+    });
+
+    @override
+    Widget build(BuildContext context) {
+        return Expanded(
+            child: Card(
+                child: Container(
+                    padding: .all(10),
+                    child: Flex(
+                        direction: .vertical,
+                        mainAxisAlignment: .center,
+                        crossAxisAlignment: .start,
+                        children: [
+                            Text(
+                                heading,
+                                style: .new(
+                                    fontWeight: .w600,
+                                    fontSize: 18,
+                                ),
+                            ),
+                            Text(text),
+                        ],
                     ),
                 ),
             ),
@@ -64,21 +422,16 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
 class TrainLiveStatusHeading extends StatelessWidget {
     final String trainNumber;
     final String trainName;
-    final ValueChanged<bool> onChanged;
-    final bool value;
 
     const TrainLiveStatusHeading({
         super.key,
         required this.trainName,
         required this.trainNumber,
-        required this.onChanged,
-        required this.value,
     });
 
     @override
     Widget build(BuildContext context) {
         return Column(
-            mainAxisAlignment: .start,
             crossAxisAlignment: .start,
             children: [
                 Padding(
@@ -91,55 +444,34 @@ class TrainLiveStatusHeading extends StatelessWidget {
                         )
                     ),
                 ),
-                Row(
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                        Padding(
-                            padding: .only(left: 10),
-                            child: Container(
-                                padding: .symmetric(horizontal: 8),
-                                decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: .all(.circular(4)),
-                                ),
-                                child: Text(
-                                    trainNumber,
-                                    style: .new(
-                                        color: Colors.white,
-                                    ),
-                                ),
+                Padding(
+                    padding: .only(left: 10),
+                    child: Container(
+                        padding: .symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: .all(.circular(4)),
+                        ),
+                        child: Text(
+                            trainNumber,
+                            style: .new(
+                                color: Colors.white,
                             ),
                         ),
-                        Row(
-                            children: [
-                                Padding(
-                                    padding: .only(left: 10),
-                                    child: Text(
-                                        'Live Mode',
-                                        style: .new(
-                                            color: Colors.grey,
-                                        ),
-                                    ),
-                                ),
-                                Switch(
-                                    activeThumbColor: Colors.blue,
-                                    value: value,
-                                    onChanged: onChanged,
-                                ),
-                            ],
-                        ),
-                    ],
+                    ),
                 ),
             ],
         );
     }
 }
 
-class TrainStopsList extends StatefulWidget {
+class TrainStopsList extends StatelessWidget {
     final String trainNumber;
     final List<TrainStop> stops;
-    final List<Station> stations;
+    final Map<String, Station> stations;
     final bool isLiveMode;
+    final Status? status; 
+    final VoidCallback? Function(String) onTap;
 
     const TrainStopsList({
         super.key,
@@ -147,68 +479,9 @@ class TrainStopsList extends StatefulWidget {
         required this.stops,
         required this.stations,
         required this.isLiveMode,
+        required this.onTap,
+        this.status,
     });
-
-    @override
-    State<StatefulWidget> createState() => TrainStopsListState();
-}
-
-class TrainStopsListState extends State<TrainStopsList> {
-    Status? _status;
-    Timer? _timer;
-
-    @override
-    void initState() {
-        super.initState();
-
-        _timer = Timer.periodic(
-            Duration(seconds: 2),
-            (_) async {
-                if (widget.isLiveMode) {
-                    return;
-                }
-
-                final data = await Status.fetchStatus(widget.trainNumber);
-
-                if (!mounted) {
-                    return;
-                }
-
-                setState(() {
-                    _status = data;
-                });
-            }
-        );
-    }
-
-    @override
-    void dispose() {
-        super.dispose();
-        _timer?.cancel();
-    }
-
-    VoidCallback? _getOnTap(String stationId) {
-        if (!widget.isLiveMode) {
-            return null;
-        }
-
-        return () {
-            // TODO: improve error handling
-            // for update failure
-            setState(() {
-                _status = Status(
-                    state: TrainStatus.running,
-                    number: widget.trainNumber,
-                    station: stationId,
-                );
-            });
-
-            Status.updateStatus(
-                widget.trainNumber,
-                stationId,
-            );
-        };
-    }
 
     @override
     Widget build(BuildContext context) {
@@ -219,16 +492,16 @@ class TrainStopsListState extends State<TrainStopsList> {
                     child: Card(
                         clipBehavior: .hardEdge,
                         child: ListView.separated(
-                            itemCount: widget.stops.length,
+                            itemCount: stops.length,
                             itemBuilder: (context, index) {
-                                final stop = widget.stops[index];
+                                final stop = stops[index];
                                 return TrainStopCard(
                                     stop: stop,
-                                    stations: widget.stations,
-                                    here: _status != null ?
-                                            _status?.station == stop.station :
+                                    stations: stations,
+                                    here: status != null ?
+                                            status?.station == stop.station :
                                             false,
-                                    onTap: _getOnTap(stop.station),
+                                    onTap: onTap(stop.station),
                                 );
                             },
                             separatorBuilder: (context, index) {
@@ -297,7 +570,7 @@ class TrainStopsListHeading extends StatelessWidget {
 
 class TrainStopCard extends StatelessWidget {
     final TrainStop stop;
-    final List<Station> stations;
+    final Map<String, Station> stations;
     final bool here;
     final VoidCallback? onTap;
     late Station _station;
@@ -309,9 +582,7 @@ class TrainStopCard extends StatelessWidget {
         required this.here,
         this.onTap,
     }) {
-        _station = stations.firstWhere(
-            (s) => s.id == stop.station
-        );
+        _station = stations[stop.station]!;
     }
 
     @override

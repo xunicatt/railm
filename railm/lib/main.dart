@@ -4,11 +4,14 @@
 // Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
 
 import 'package:flutter/material.dart';
+import 'package:railm/configs/configs.dart';
 import 'package:railm/pages/train_home.dart';
 import 'package:localstore/localstore.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 void main() {
     WidgetsFlutterBinding.ensureInitialized();
+    MapboxOptions.setAccessToken(Configs.mapboxToken);
     runApp(const App());
 }
 
@@ -45,7 +48,11 @@ class AppState extends State<App> {
             return;
         }
 
-        String stored = data['last-cached'];
+        String? stored = data['last-cached'];
+        if (stored == null) {
+            return;
+        }
+
         final date = DateTime.parse(stored);
         final diff = DateTime.now().difference(date);
 
