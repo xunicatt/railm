@@ -6,6 +6,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:localstore/localstore.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:railm/components/loading.dart';
 import 'package:railm/configs/configs.dart';
@@ -28,8 +29,13 @@ class MapData {
 }
 
 class MapView extends StatefulWidget {
+    final String srcStationId;
     final void Function(MapData) onConfirmedClicked;
-    const MapView({super.key, required this.onConfirmedClicked});
+    const MapView({
+        super.key, 
+        required this.onConfirmedClicked, 
+        required this.srcStationId
+    });
     
     @override
     State<StatefulWidget> createState() => MapViewState();
@@ -44,6 +50,7 @@ class MapViewState extends State<MapView> {
     int _selectedRouted = 0;
     List<dynamic> _routes = [];
     final _gl = GeolocatorPlatform.instance;
+    final _db = Localstore.getInstance(useSupportDir: true);
 
     @override
     void initState() {
@@ -66,6 +73,19 @@ class MapViewState extends State<MapView> {
             _latitude = pos.latitude;
             _longitude = pos.longitude;
         });
+
+        final stationLocation = await _db.collection("station-locations")
+            .doc(widget.srcStationId)
+            .get();
+
+        if (stationLocation != null) {
+            setState(() {
+                _destLat = stationLocation['lat'];
+                _destLong = stationLocation['long'];
+            });
+
+            await fetchRoutes(_destLong!, _destLat!);
+        }
     }
 
     Future<void> fetchRoutes(num longitude, num latitude) async {
@@ -116,7 +136,6 @@ class MapViewState extends State<MapView> {
                 ..lineOpacity = selected == i ? 1.0 : 0.4,
             );
         }
-
     }
 
     @override
@@ -166,13 +185,19 @@ class MapViewState extends State<MapView> {
                                     ),
                                 );
                             },
-                            onTapListener: (data) {
+                            onTapListener: (data) async {
                                 final cord = data.point.coordinates;
+                                await _db.collection("station-locations")
+                                    .doc(widget.srcStationId)
+                                    .set({
+                                        'lat': cord.lat,
+                                        'long': cord.lng,
+                                    });
                                 setState(() {
                                     _destLat = cord.lat;
                                     _destLong = cord.lng;
                                 });
-                                fetchRoutes(cord.lng, cord.lat);
+                                await fetchRoutes(cord.lng, cord.lat);
                             },
                         ),
                     ),

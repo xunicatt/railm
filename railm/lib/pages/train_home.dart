@@ -268,6 +268,7 @@ class FindTrainsCardState extends State<FindTrainsCard> {
                     return MapView(
                         // TODO: pass down the data to show
                         // data and cache it
+                        srcStationId: _src!,
                         onConfirmedClicked: (data) {
                             Navigator.push<void>(
                                 context,
