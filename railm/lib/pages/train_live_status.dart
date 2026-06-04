@@ -345,10 +345,8 @@ class StatusView extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-        return Container(
+        return Padding(
             padding: .all(20),
-            width: .infinity,
-            alignment: .topCenter,
             child: Flex(
                 direction: .vertical,
                 crossAxisAlignment: .center,
