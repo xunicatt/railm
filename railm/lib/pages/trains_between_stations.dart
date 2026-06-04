@@ -255,6 +255,7 @@ class TrainCard extends StatelessWidget {
                             train: train,
                             stations: stations,
                             mapData: mapData,
+                            srcStationId: srcStation.id,
                         ),
                     ),
                 );

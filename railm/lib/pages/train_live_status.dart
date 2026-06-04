@@ -14,11 +14,13 @@ class TrainLiveStatusPage extends StatefulWidget {
     final Train train;
     final Map<String, Station> stations;
     final MapData? mapData;
+    final String? srcStationId;
 
     const TrainLiveStatusPage({
         super.key,
         required this.train,
         required this.stations,
+        this.srcStationId,
         this.mapData,
     });
 
@@ -30,6 +32,7 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
     bool _liveMode = false;
     Status? _status;
     Timer? _timer;
+    String? _trainDelay;
 
     @override
     void initState() {
@@ -39,6 +42,18 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
             Duration(seconds: 2),
             (_) async {
                 if (_liveMode) {
+                    final srcStationId = widget.srcStationId;
+                    if (srcStationId == null) {
+                        return;
+                    }
+
+                   String trainDelay = "Unknown";
+                    if (_status != null) {
+                        trainDelay = _computeDelay(srcStationId, _status!);
+                        setState(() {
+                            _trainDelay = trainDelay;
+                        });
+                    }
                     return;
                 }
 
@@ -51,6 +66,19 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                 setState(() {
                     _status = data;
                 });
+
+                final srcStationId = widget.srcStationId;
+                if (srcStationId == null) {
+                    return;
+                }
+
+                String trainDelay = "Unknown";
+                if (data != null) {
+                    trainDelay = _computeDelay(srcStationId, data);
+                    setState(() {
+                        _trainDelay = trainDelay;
+                    });
+                }
             }
         );
     }
@@ -71,19 +99,94 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
             // for update failure
             setState(() {
                 _status = Status(
-                    state: TrainStatus.running,
                     number: widget.train.number,
                     station: stationId,
+                    time: _timeNow(),
                 );
             });
 
             Status.updateStatus(
                 widget.train.number,
                 stationId,
+                _timeNow(),
             );
         };
     }
 
+    String _timeNow() {
+        final now = DateTime.now();
+        return "${now.hour}:${now.minute}";
+    }
+
+    Widget _getStatusView() {
+        return StatusView(
+            children: [
+                StatusViewRow(
+                    children: [
+                        StatusViewCard(
+                            heading: 'Train Delay',
+                            text: _trainDelay ?? "Unknown",
+                        ),
+                        StatusViewCard(
+                            heading: 'Traffic Delay',
+                            text: '8 mins',
+                        ),
+                    ]
+                ),
+                StatusViewRow(
+                    children: [
+                        StatusViewCard(
+                            heading: 'Expected Delay',
+                            text: '21 mins',
+                        ),
+                    ]
+                ),
+            ]
+        );
+    }
+
+    int _toMinutes(String s) {
+        final [hrsRaw, minsRaw] = s.split(":");
+        final hrs = int.parse(hrsRaw);
+        final mins = int.parse(minsRaw);
+
+        return hrs * 60 + mins;
+    }
+
+    String _computeDelay(String srcStationId, Status status) {
+        String currStationId = status.station;
+        int currStationPos = widget.train.stops.indexWhere(
+            (s) => s.station == currStationId
+        );
+
+        int srcStationPos = widget.train.stops.indexWhere(
+            (s) => s.station == srcStationId 
+        );
+
+        if (currStationPos == srcStationPos) {
+            return "Arrived";
+        }
+
+        if (currStationPos > srcStationPos) {
+            return "Left";
+        }
+
+        var arrivalRaw = widget.train.stops[currStationPos].arrival;
+        if (arrivalRaw == "--:--") {
+            arrivalRaw = widget.train.stops[currStationPos].departure;
+        }
+        final arrival = _toMinutes(arrivalRaw);
+
+        final lastUpdated = _toMinutes(status.time);
+        
+        final diff = lastUpdated - arrival;
+
+        if (diff <= 0) {
+            return "Ontime";
+        }
+
+        return "$diff mins";
+    }
 
     @override
     Widget build(BuildContext context) {
@@ -132,32 +235,7 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                                                     showModalBottomSheet(
                                                         context: context,
                                                         useSafeArea: true,
-                                                        builder: (_) {
-                                                            return StatusView(
-                                                                children: [
-                                                                    StatusViewRow(
-                                                                        children: [
-                                                                            StatusViewCard(
-                                                                                heading: 'Train Delay',
-                                                                                text: '13 mins',
-                                                                            ),
-                                                                            StatusViewCard(
-                                                                                heading: 'Traffic Delay',
-                                                                                text: '8 mins',
-                                                                            ),
-                                                                        ]
-                                                                    ),
-                                                                    StatusViewRow(
-                                                                        children: [
-                                                                            StatusViewCard(
-                                                                                heading: 'Expected Delay',
-                                                                                text: '21 mins',
-                                                                            ),
-                                                                        ]
-                                                                    ),
-                                                                ]
-                                                            );
-                                                        },
+                                                        builder: (_) => _getStatusView(),
                                                     ),
                                                 },
                                             ),
