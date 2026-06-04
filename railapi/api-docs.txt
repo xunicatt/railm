@@ -1,7 +1,7 @@
 # Docs for endpoints
 
 -------------------
-|  Version: 0.2   |
+|  Version: 0.3   |
 -------------------
 
 Note:
@@ -53,7 +53,7 @@ Definitions:
                                           output: <[]string> (array of train numbers)
 
 -> Train Status
-    1. POST /status/<number>/<station> - input:
-                                         output: fail-success
+    1. POST /status/<number>/<station>?time=<hh:mm> - input:
+                                                      output: fail-success
     2. GET /status/<number> - input:
                               output: <status>

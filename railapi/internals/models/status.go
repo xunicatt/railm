@@ -17,4 +17,5 @@ type Status struct {
 	Number string `json:"number"`
 	Station string `json:"station"`
 	State TrainStatus `json:"state"`
+	Time string `json:"time"`
 }

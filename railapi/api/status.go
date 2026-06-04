@@ -52,6 +52,12 @@ func (c *Context) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 	number := r.PathValue("number")
 	station := r.PathValue("station")
 
+	time := r.URL.Query().Get("time")
+	if time == "" {
+		failed(w, "This api is deprecated. Please check new api-docs.txt.")
+		return
+	}
+
 	if rank.Check(number, station) {
 		status, err := db.GetStatus(c.sql, number)
 		if err != nil {
@@ -67,6 +73,7 @@ func (c *Context) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 			Number: number,	
 			Station: station,
 			State: models.STATUS_RUNNING,
+			Time: time,
 		}
 
 		if status == nil {

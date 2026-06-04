@@ -69,6 +69,7 @@ func createStatusTable(sql *sql.DB) error {
 			number TEXT PRIMARY KEY NOT NULL,
 			station TEXT,
 			state INTEGER,
+			time TEXT,
 
 			FOREIGN KEY(number) REFERENCES train(number),
 			FOREIGN KEY(station) REFERENCES station(id)

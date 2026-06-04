@@ -127,11 +127,13 @@ func InsertStatus(db *sql.DB, status *models.Status) error {
 		`INSERT INTO status(
 			number,
 			station,
-			state	
-		) values (?1, ?2, ?3);`,
+			state,
+			time
+		) values (?1, ?2, ?3, ?4);`,
 		status.Number,
 		status.Station,
 		status.State,
+		status.Time,
 	)
 	if err != nil {
 		return fmt.Errorf(

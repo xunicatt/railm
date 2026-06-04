@@ -16,10 +16,12 @@ func UpdateStatus(sql *sql.DB, status *models.Status) error {
 	   `UPDATE status
 		SET
 			station = (?1),
-			state = (?2)
-		WHERE number == (?3);`,
+			state = (?2),
+			time = (?3),
+		WHERE number == (?4);`,
 		status.Station,
 		status.State,
+		status.Time,
 		status.Number,
 	)
 

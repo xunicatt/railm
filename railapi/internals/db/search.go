@@ -343,7 +343,8 @@ func GetStatus(db *sql.DB, number string) (*models.Status, error) {
 	row := db.QueryRow(
 		`SELECT
 			station,
-			state
+			state,
+			time
 		FROM status
 		WHERE number == (?1)`, 
 		number,
@@ -361,6 +362,7 @@ func GetStatus(db *sql.DB, number string) (*models.Status, error) {
 	err := row.Scan(
 		&status.Station,
 		&status.State,
+		&status.Time,
 	)
 	if err == sql.ErrNoRows {
 		return nil, nil 
