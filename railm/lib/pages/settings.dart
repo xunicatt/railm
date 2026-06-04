@@ -206,6 +206,12 @@ class SettingCacheOptionsState extends State<SettingCacheOptions> {
                         _db.collection("stations").delete();
                     },
                 ),
+                SettingCacheOptionsButton(
+                    text: 'Clear Station Location Cache',
+                    onPressed: () {
+                        _db.collection("station-locations").delete();
+                    },
+                ),
                 Padding(
                     padding: .symmetric(horizontal: 10),
                     child: Row(
@@ -222,6 +228,7 @@ class SettingCacheOptionsState extends State<SettingCacheOptions> {
                             Switch(
                                 activeThumbColor: Colors.blue,
                                 value: _autoRefresh,
+
                                 onChanged: (x) {
                                     setState(() {
                                         _autoRefresh = x; 
