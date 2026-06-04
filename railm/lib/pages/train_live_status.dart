@@ -128,7 +128,38 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                                                 style: .new(
                                                     backgroundColor: .all<Color>(Colors.blueGrey),
                                                 ),
-                                                onPressed: () {},
+                                                onPressed: () => {
+                                                    showModalBottomSheet(
+                                                        context: context,
+                                                        useSafeArea: true,
+                                                        builder: (_) {
+                                                            return StatusView(
+                                                                children: [
+                                                                    StatusViewRow(
+                                                                        children: [
+                                                                            StatusViewCard(
+                                                                                heading: 'Train Delay',
+                                                                                text: '13 mins',
+                                                                            ),
+                                                                            StatusViewCard(
+                                                                                heading: 'Traffic Delay',
+                                                                                text: '8 mins',
+                                                                            ),
+                                                                        ]
+                                                                    ),
+                                                                    StatusViewRow(
+                                                                        children: [
+                                                                            StatusViewCard(
+                                                                                heading: 'Expected Delay',
+                                                                                text: '21 mins',
+                                                                            ),
+                                                                        ]
+                                                                    ),
+                                                                ]
+                                                            );
+                                                        },
+                                                    ),
+                                                },
                                             ),
                                             Text(
                                                 'Status',
@@ -159,6 +190,92 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                                 ],
                             ),
                         ], 
+                    ),
+                ),
+            ),
+        );
+    }
+}
+
+class StatusView extends StatelessWidget {
+    final List<Widget> children;
+
+    const StatusView({
+        super.key,
+        required this.children,
+    });
+
+    @override
+    Widget build(BuildContext context) {
+        return Container(
+            padding: .all(20),
+            width: .infinity,
+            alignment: .topCenter,
+            child: Flex(
+                direction: .vertical,
+                crossAxisAlignment: .start,
+                mainAxisAlignment: .start,
+                mainAxisSize: .min,
+                children: [
+                    Text(
+                        'Status',
+                        style: .new(
+                            fontSize: 26,
+                            fontWeight: .w800,
+                        ),
+                    ),
+                    SizedBox(height: 20),
+                    ...children,
+                ],
+            ),
+        );
+    }
+}
+
+class StatusViewRow extends StatelessWidget {
+    final List<Widget> children;
+
+    const StatusViewRow({super.key, required this.children});
+
+    @override
+    Widget build(BuildContext context) {
+        return Flex(
+            direction: .horizontal,
+            children: children,
+        );
+    }
+}
+
+class StatusViewCard extends StatelessWidget {
+    final String heading;
+    final String text;
+
+    const StatusViewCard({
+        super.key,
+        required this.heading,
+        required this.text,
+    });
+
+    @override
+    Widget build(BuildContext context) {
+        return Expanded(
+            child: Card(
+                child: Container(
+                    padding: .all(10),
+                    child: Flex(
+                        direction: .vertical,
+                        mainAxisAlignment: .center,
+                        crossAxisAlignment: .start,
+                        children: [
+                            Text(
+                                heading,
+                                style: .new(
+                                    fontWeight: .w600,
+                                    fontSize: 18,
+                                ),
+                            ),
+                            Text(text),
+                        ],
                     ),
                 ),
             ),
