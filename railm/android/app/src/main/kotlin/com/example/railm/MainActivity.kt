@@ -1,4 +1,4 @@
-package com.example.railm
+package com.xunicatt.railm
 
 import io.flutter.embedding.android.FlutterActivity
 
