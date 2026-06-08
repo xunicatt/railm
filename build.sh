@@ -6,8 +6,7 @@ RAILM_API_URL="${RAILM_API_URL}"
 RAILM_API_TOKEN="${RAILM_API_TOKEN}"
 MAPBOX_API_TOKEN="${MAPBOX_API_TOKEN}"
 
-RAILM_VERSION=$(cat railm/version)
-RAILAPI_VERSION=$(cat railapi/version)
+VERSION=$(cat version)
 
 build-railm() {
     cd railm
@@ -16,7 +15,7 @@ build-railm() {
                       --dart-define=TOKEN="${RAILM_API_TOKEN}" \
                       --dart-define=MAPBOX_TOKEN="${MAPBOX_API_TOKEN}"
     cd ..
-    mv railm/build/app/outputs/apk/release/app-release.apk build/"railm-android-${RAILM_VERSION}.apk"
+    mv railm/build/app/outputs/apk/release/app-release.apk build/"railm-android-${VERSION}.apk"
 
     if [[ "$UNAME" == "Darwin" ]]; then
         cd railm
@@ -28,7 +27,7 @@ build-railm() {
         cp -r railm/build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app build/Payload
         zip -r build/app.zip build/Payload
         rm -r build/Payload
-        mv build/app.zip build/"railm-ios-${RAILM_VERSION}.ipa"
+        mv build/app.zip build/"railm-ios-${VERSION}.ipa"
     fi
 }
 
@@ -39,7 +38,7 @@ build-railapi() {
     cd railapi
     GOOS=${OS} GOARCH=${ARCH} go build -o build/server cmd/server/main.go
     cd ..
-    mv railapi/build/server build/"railapi-${OS}-${ARCH}-${RAILAPI_VERSION}"
+    mv railapi/build/server build/"railapi-${OS}-${ARCH}-${VERSION}"
 }
 
 main() {
