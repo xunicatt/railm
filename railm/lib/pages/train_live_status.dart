@@ -46,6 +46,10 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
         _timer = Timer.periodic(
             Duration(seconds: 2),
             (_) async {
+                if (!mounted) {
+                    return;
+                }
+
                 final mapData = widget.mapData;
                 if (mapData != null && _travelTimeMins != null) {
                     final routesTrafficData = await MapView.fetchRoute(
@@ -69,13 +73,10 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                     if (_status != null) {
                         _setTrainDelay(_status!);
                     }
+                    return;
                 }
 
                 final data = await Status.fetchStatus(widget.train.number);
-
-                if (!mounted) {
-                    return;
-                }
 
                 setState(() {
                     _status = data;
