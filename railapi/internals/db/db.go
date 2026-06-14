@@ -51,7 +51,7 @@ func Init(sql *sql.DB) error {
 		)
 	}
 
-	err = resetStatusTable(sql)
+	err = ResetStatusTable(sql)
 	if err != nil {
 		return fmt.Errorf(
 			"failed to reset 'status' table: %v",

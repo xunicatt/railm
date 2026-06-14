@@ -69,6 +69,8 @@ func NewApp(url string, port string, threshold uint) (*App, error) {
 	mux.HandleFunc("GET /status/{number}", ctx.GetStatus)
 	mux.HandleFunc("POST /status/{number}/{station}", ctx.UpdateStatus)
 
+	mux.HandleFunc("POST /refresh/{type}", ctx.Refresh)
+
 	rank.Init(threshold)
 
 	handler := api.AuthMiddleware(mux)
