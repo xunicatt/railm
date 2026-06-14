@@ -51,7 +51,6 @@ TARGETS += railapi railm
 
 pre-build: .build
 	@echo `bc -e "$(BUILDVER) + 1"` > .build
-	@echo  "Build Version: $(BUILDVER)"
 
 build: $(TARGETS)
 
