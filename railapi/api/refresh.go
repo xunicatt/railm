@@ -16,6 +16,10 @@ func (c *Context) Refresh(w http.ResponseWriter, r *http.Request) {
 
 	case "tokens":
 		err = token.Init(c.sql)
+
+	default:
+		failed(w, "unknown type")
+		return
 	}
 
 	if err != nil {
