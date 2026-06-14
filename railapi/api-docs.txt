@@ -57,3 +57,10 @@ Definitions:
                                                       output: fail-success
     2. GET /status/<number> - input:
                               output: <status>
+
+-> Refresh
+    1. POST /refresh/<type> - input: 
+                            - output: fail-success
+       Available types: status/tokens
+       - status: Resets status table
+       - tokens: Fetches tokens for DB
