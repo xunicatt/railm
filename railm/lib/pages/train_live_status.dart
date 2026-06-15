@@ -91,13 +91,15 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
         if (_updating) return;
         _updating = true;
 
-        final data = await Status.fetchStatus(widget.train.number);
-        if (!mounted) return;
+        if (!_liveMode || (_liveMode && _status == null)) {
+            final data = await Status.fetchStatus(widget.train.number);
+            if (!mounted) return;
 
-        if (data != null) {
-            setState(() {
-                _status = data;
-            });
+            if (data != null) {
+                setState(() {
+                    _status = data;
+                });
+            }
         }
         
         _totalDelay = 0;

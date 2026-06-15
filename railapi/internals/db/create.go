@@ -68,7 +68,6 @@ func createStatusTable(sql *sql.DB) error {
 		`CREATE TABLE IF NOT EXISTS status(
 			number TEXT PRIMARY KEY NOT NULL,
 			station TEXT,
-			state INTEGER,
 			time TEXT,
 
 			FOREIGN KEY(number) REFERENCES train(number),

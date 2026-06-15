@@ -72,7 +72,6 @@ func (c *Context) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 		status2 := &models.Status{
 			Number: number,	
 			Station: station,
-			State: models.STATUS_RUNNING,
 			Time: time,
 		}
 
@@ -92,7 +91,7 @@ func (c *Context) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if status.Station == status2.Station &&
-		   status.State == status2.State {
+		   status.Time == status2.Time {
 			success(w)
 			return
 		}
