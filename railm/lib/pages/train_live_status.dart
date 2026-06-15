@@ -9,6 +9,11 @@ import 'package:railm/components/map.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/status.dart';
 import 'package:railm/models/train.dart';
+import 'package:railm/utils/plugin.dart';
+import 'package:railm/utils/plugins/expected_delay.dart';
+import 'package:railm/utils/plugins/traffic_delay.dart';
+import 'package:railm/utils/plugins/train_delay.dart';
+import 'package:railm/utils/plugins/travel_delay.dart';
 
 class TrainLiveStatusPage extends StatefulWidget {
     final Train train;
@@ -33,100 +38,107 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
     Status? _status;
     Timer? _timer;
 
-    String? _trainDelay;
-    num? _trainDelayMins;
-    num? _travelTimeMins;
-    num? _trafficDelayMins;
+    num _totalDelay = ExpectedDelayType.unknown.value;
+    bool _updating = false;
+    List<Plugin> _plugins = [];
+    List<StatusViewCard> _cards = [];
 
     @override
     void initState() {
         super.initState();
-        _fetchRoutesTravelTime();
 
+        final trainDelay = TrainDelay(
+            trainNumber: widget.train.number,
+            srcStationId: widget.srcStationId,
+            trainStops: widget.train.stops,
+            getStatus: () => _status,
+        );
+
+        final travelDelay = TravelDelay(
+            data: widget.mapData, 
+        );
+
+        final trafficDelay = TrafficDelay(
+            data: widget.mapData,
+            travelDelay: travelDelay,
+        );
+
+        final expectedDelay = ExpectedDelay(
+            getSum: () => _totalDelay,
+        );
+
+        _plugins = [
+            trainDelay,
+            travelDelay,
+            trafficDelay,
+            expectedDelay,
+        ];
+
+        _update();
         _timer = Timer.periodic(
             Duration(seconds: 2),
-            (_) async {
-                if (!mounted) {
-                    return;
-                }
-
-                final mapData = widget.mapData;
-                if (mapData != null && _travelTimeMins != null) {
-                    final routesTrafficData = await MapView.fetchRoute(
-                            'driving-traffic',
-                            mapData.lng1,
-                            mapData.lat1,
-                            mapData.lng2,
-                            mapData.lat2,
-                        );
-
-                    final routes = routesTrafficData['routes'];
-                    final selectedRouteTrafficData = routes[mapData.route];
-                    final trafficDelay = (selectedRouteTrafficData['duration'] / 60).floor() - _travelTimeMins;
-
-                    setState(() {
-                        _trafficDelayMins = trafficDelay;
-                    });
-                }
-
-                if (_liveMode) {
-                    if (_status != null) {
-                        _setTrainDelay(_status!);
-                    }
-                    return;
-                }
-
-                final data = await Status.fetchStatus(widget.train.number);
-
-                setState(() {
-                    _status = data;
-                });
-
-                if (data != null) {
-                    _setTrainDelay(data);
-                }
-            }
+            (_) => _update(),
         );
     }
 
     @override
     void dispose() {
-        super.dispose();
         _timer?.cancel();
+        super.dispose();
     }
 
-    void _setTrainDelay(Status status) {
-        final srcStationId = widget.srcStationId;
-        if (srcStationId == null) {
-            return;
-        }
+    Future<void> _update() async {
+        if (_updating) return;
+        _updating = true;
 
-        String? trainDelay;
-        num trainDelayMins;
-        (trainDelayMins, trainDelay) = _computeTrainDelay(srcStationId, status);
-        setState(() {
-            _trainDelay = trainDelay;
-            _trainDelayMins = trainDelayMins;
-        });
-    }
+        final data = await Status.fetchStatus(widget.train.number);
+        if (!mounted) return;
 
-    Future<void> _fetchRoutesTravelTime() async {
-        final mapData = widget.mapData;
-        if (mapData != null) {
-            final routesTravelData = await MapView.fetchRoute(
-                'driving',
-                mapData.lng1,
-                mapData.lat1,
-                mapData.lng2,
-                mapData.lat2,
-            );
-            final routes =routesTravelData['routes'];
-            final selectedRouteTravelData = routes[mapData.route];
-
+        if (data != null) {
             setState(() {
-                _travelTimeMins = (selectedRouteTravelData['duration'] / 60).floor();
+                _status = data;
             });
         }
+        
+        _totalDelay = 0;
+        List<StatusViewCard> cards = [];
+
+        for (var i = 0; i < _plugins.length; i++) {
+            final delay = await _plugins[i].fetch();
+            if (!mounted) return;
+
+            var text = "$delay mins";
+            if (_plugins[i].name == "Train Delay") {
+                if (delay == TrainDelayType.unknown.value) {
+                    text = "Unknown";
+                } else if (delay == TrainDelayType.ontime.value) {
+                    text = "Ontime";
+                } else if (delay == TrainDelayType.left.value) {
+                    text = "Left";
+                } else if (delay == TrainDelayType.arrived.value) {
+                    text = "Arrived";
+                } else {
+                    _totalDelay += delay;
+                }
+            } else {
+                _totalDelay += delay;
+            }
+
+            cards.add(
+                StatusViewCard(
+                    heading: _plugins[i].name,
+                    text: text,
+                ),
+            );
+        }
+
+        if (!mounted) return;
+
+        setState(() {
+            _cards = cards;
+        });
+
+        _updating = false;
     }
 
     VoidCallback? _getOnTap(String stationId) {
@@ -159,94 +171,33 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
     }
 
     Widget _getStatusView() {
-        num expectedDelay = 0;
+        List<StatusViewRow> rows = [];
+        var i = 0;
+        while (i < _cards.length) {
+            if (i + 1 < _cards.length) {
+                rows.add(
+                    StatusViewRow(
+                        children: [
+                            _cards[i],
+                            _cards[i + 1],
+                        ]
+                    ),
+                );
+                i += 2;
+                continue;
+            }
 
-        var travelTime = "Unknown";
-        if (_travelTimeMins != null) {
-            travelTime = "$_travelTimeMins mins";
-            expectedDelay += _travelTimeMins!;
-        }
-
-        var traficDelay = "Unknown";
-        if (_trafficDelayMins != null) {
-            traficDelay = "$_trafficDelayMins mins";
-            expectedDelay += _trafficDelayMins!;
-        }
-
-        if (_trainDelayMins != null) {
-            expectedDelay += _trainDelayMins!; 
+            rows.add(
+                StatusViewRow(
+                    children: [_cards[i]],
+                ),
+            );
+            i += 1;
         }
 
         return StatusView(
-            children: [
-                StatusViewRow(
-                    children: [
-                        StatusViewCard(
-                            heading: 'Train Delay',
-                            text: _trainDelay ?? "Unknown",
-                        ),
-                        StatusViewCard(
-                            heading: 'Route Delay',
-                            text: travelTime,
-                        ),
-                    ]
-                ),
-                StatusViewRow(
-                    children: [
-                        StatusViewCard(
-                            heading: 'Traffic Delay',
-                            text: traficDelay,
-                        ),
-                        StatusViewCard(
-                            heading: 'Expected Delay',
-                            text: "$expectedDelay mins",
-                        ),
-                    ]
-                ),
-            ],
+            children: rows,
         );
-    }
-
-    int _toMinutes(String s) {
-        final [hrsRaw, minsRaw] = s.split(":");
-        final hrs = int.parse(hrsRaw);
-        final mins = int.parse(minsRaw);
-
-        return hrs * 60 + mins;
-    }
-
-    (num, String) _computeTrainDelay(String srcStationId, Status status) {
-        String currStationId = status.station;
-        int currStationPos = widget.train.stops.indexWhere(
-            (s) => s.station == currStationId
-        );
-
-        int srcStationPos = widget.train.stops.indexWhere(
-            (s) => s.station == srcStationId 
-        );
-
-        if (currStationPos == srcStationPos) {
-            return (0, "Arrived");
-        }
-
-        if (currStationPos > srcStationPos) {
-            return (0, "Left");
-        }
-
-        var arrivalRaw = widget.train.stops[currStationPos].arrival;
-        if (arrivalRaw == "--:--") {
-            arrivalRaw = widget.train.stops[currStationPos].departure;
-        }
-
-        final arrival = _toMinutes(arrivalRaw);
-        final lastUpdated = _toMinutes(status.time);
-        final diff = lastUpdated - arrival;
-
-        if (diff <= 0) {
-            return (0, "Ontime");
-        }
-
-        return (diff, "$diff mins");
     }
 
     @override
@@ -290,14 +241,16 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                                                     Icons.insights,
                                                 ),
                                                 style: .new(
-                                                    backgroundColor: .all<Color>(Colors.blue),
+                                                    backgroundColor: _cards.isEmpty ? 
+                                                        .all<Color>(Colors.grey) :
+                                                        .all<Color>(Colors.blue),
                                                 ),
-                                                onPressed: () => {
+                                                onPressed: _cards.isEmpty ? null : () {
                                                     showModalBottomSheet(
                                                         context: context,
                                                         useSafeArea: true,
                                                         builder: (_) => _getStatusView(),
-                                                    ),
+                                                    );
                                                 },
                                             ),
                                             Text(
@@ -533,8 +486,7 @@ class TrainStopsListHeading extends StatelessWidget {
                         flex: 1,
                         child: Icon(
                             Icons.location_on,
-                            color: Colors.blue,
-                        ),
+                            color: Colors.blue,),
                     ),
                     Expanded(
                         flex: 2,
