@@ -7,15 +7,15 @@ GO ?= go
 BUILD ?= build
 RAILAPI ?= .
 
-DATE = $(shell date +%y%m)
-BUILDVER = $(shell cat ../.build)
+DATE := $(shell date +%y%m)
+BUILDVER := $(shell cat ../.build)
 VERSION ?= v$(DATE).$(BUILDVER)
 
 PORT ?=
 TURSO_DATABASE_URL ?=
 TURSO_DATABASE_TOKEN ?=
 
-TARGETS = \
+TARGETS := \
 	$(BUILD)/railapi-linux-amd64-$(VERSION) \
 	$(BUILD)/railapi-linux-arm64-$(VERSION) \
 	$(BUILD)/railapi-darwin-arm64-$(VERSION)

@@ -9,13 +9,13 @@ MAPBOX_TOKEN ?=
 
 RELEASE ?=
 
-PWD = $(shell pwd)
+PWD := $(shell pwd)
 BUILD ?= $(PWD)/build
 
-RAILAPI = $(PWD)/railapi
-RAILM = $(PWD)/railm
+RAILAPI := $(PWD)/railapi
+RAILM := $(PWD)/railm
 
-DATE = $(shell date +%y%m)
+DATE := $(shell date +%y%m)
 BUILDVER = $(shell cat .build)
 VERSION = v$(DATE).$(BUILDVER)
 

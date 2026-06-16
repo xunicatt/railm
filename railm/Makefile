@@ -7,15 +7,15 @@ FLUTTER ?= flutter
 BUILD ?= build
 RAILM ?= .
 
-DATE = $(shell date +%y%m)
-BUILDVER = $(shell cat ../.build)
+DATE := $(shell date +%y%m)
+BUILDVER := $(shell cat ../.build)
 VERSION ?= v$(DATE).$(BUILDVER)
 
 RAILAPI_URL ?=
 RAILAPI_TOKEN ?=
 MAPBOX_TOKEN ?=
 
-TARGETS = \
+TARGETS := \
 	$(BUILD)/railm-android-$(VERSION).apk
 
 ifeq ($(shell uname),Darwin)
