@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  railapi:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: railapi
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: railapi/go.mod
+
+      - run: go mod download
+      - run: go vet ./...
+      - run: go build ./cmd/server
+
+  railm:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: railm
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter build apk --debug
