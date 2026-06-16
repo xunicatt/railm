@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0
+// Author: xunicatt
+// Project: railm (railm) 
+// Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
+
 import 'package:railm/utils/plugin.dart';
 import 'package:railm/components/map.dart';
 import 'package:railm/utils/plugins/travel_delay.dart';
