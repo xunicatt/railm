@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 // Author: xunicatt
-// Project: railm (railapi) 
+// Project: railm (railapi)
 // Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
 
 package api
@@ -12,6 +12,7 @@ import (
 	"railapi/internals/db"
 	"railapi/internals/models"
 	"railapi/internals/rank"
+	"time"
 )
 
 func (c *Context) GetStatus(w http.ResponseWriter, r *http.Request) {
@@ -53,8 +54,8 @@ func (c *Context) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 	station := r.PathValue("station")
 
 	time := r.URL.Query().Get("time")
-	if time == "" {
-		failed(w, "This api is deprecated. Please check new api-docs.txt.")
+	if !isValidTime(time) {
+		badRequest(w)
 		return
 	}
 
@@ -108,4 +109,9 @@ func (c *Context) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 	}
 
 	success(w)
+}
+
+func isValidTime(tm string) bool {
+	_, err := time.Parse("15:04", tm)
+	return err == nil
 }
