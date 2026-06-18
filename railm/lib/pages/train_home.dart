@@ -259,6 +259,28 @@ class FindTrainsCardState extends State<FindTrainsCard> {
         }
 
         return () {
+            if (_src == _dest) {
+                showDialog(
+                    barrierDismissible: true,
+                    context: context,
+                    builder: (context) {
+                        return AlertDialog(
+                            title: Text('Wrong Selection'),
+                            content: Text(
+                                'Source and Destination station cannot be same.',
+                            ),
+                            actions: [
+                                TextButton(
+                                    child: Text('Ok'),
+                                    onPressed: () => Navigator.pop(context),
+                                )
+                            ],
+                        );
+                    },
+                );
+                return;
+            }
+
             showModalBottomSheet(
                 context: context, 
                 isScrollControlled: true,
