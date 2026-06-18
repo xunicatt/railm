@@ -49,15 +49,9 @@ class Train(TypedDict):
 
 Payload = Route | Station | Train
 
-port = os.getenv("PORT")
-if port == None:
-    port = "3000"
-
-URL = f"http://localhost:{port}"
-
-def insert(key: str, data: Payload) -> bool:
+def insert(url: str, token: str, key: str, data: Payload) -> bool:
     resp = requests.post(
-        f"{URL}/{key}",
+        f"{url}/{key}?auth={token}",
         json=data
     )
 
@@ -71,40 +65,43 @@ def insert(key: str, data: Payload) -> bool:
 
     return True
 
-def insert_routes(routes: list[Route]):
+def insert_routes(url: str, token: str, routes: list[Route]):
     for route in routes:
-        if not insert("routes", route):
+        if not insert(url, token, "routes", route):
             raise Exception("failed to send request")
 
-def insert_station(stations: list[Station]):
+def insert_station(url: str, token: str, stations: list[Station]):
     for station in stations:
-        if not insert("stations", station):
+        if not insert(url, token, "stations", station):
             raise Exception("failed to send request")
 
-def insert_trains(trains: list[Train]):
+def insert_trains(url: str, token: str, trains: list[Train]):
     for train in trains:
-        if not insert("trains", train):
+        if not insert(url, token, "trains", train):
             raise Exception("failed to send request")
 
 def main() -> None:
     argv = sys.argv
     argc = len(argv)
 
-    if (argc != 2):
-        print(f"usage: {argv[0]} <file-name>.json")
+    if (argc != 4):
+        print(f"usage: {argv[0]} <url> <token> <file-name>.json")
         exit(1)
 
+    url = argv[1]
+    token = argv[2]
+
     try:
-        with open(sys.argv[1], encoding="utf-8") as file:
+        with open(sys.argv[3], encoding="utf-8") as file:
             data: dict[str, list[Any]] = json.load(file)
             for key, value in data.items():
                 match key:
                     case "routes":
-                        insert_routes(value)
+                        insert_routes(url, token, value)
                     case "stations":
-                        insert_station(value)
+                        insert_station(url, token, value)
                     case "trains":
-                        insert_trains(value)
+                        insert_trains(url, token, value)
                     case _:
                         pass
 
