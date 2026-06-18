@@ -70,7 +70,7 @@ func (c *Context) AddStation(w http.ResponseWriter, r *http.Request) {
 	err = db.InsertStation(c.sql, &station)
 	if err != nil {
 		log.Printf(
-			"failed to insert 'models.Station';: %v",
+			"failed to insert 'models.Station': %v",
 			err.Error(),
 		)
 		serverError(w)
@@ -103,7 +103,7 @@ func (c *Context) AddTrain(w http.ResponseWriter, r *http.Request) {
 	err = db.InsertTrain(c.sql, &train)
 	if err != nil {
 		log.Printf(
-			"failed to insert 'models.Train';: %v",
+			"failed to insert 'models.Train': %v",
 			err.Error(),
 		)
 		serverError(w)
