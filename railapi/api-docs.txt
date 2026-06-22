@@ -23,8 +23,7 @@ Definitions:
 - train: {"number": <string>, "name": <string>, "start": <string>, "end": <string>, "stops": <[]stops>}
   > start/end: start/end id from station.id
 
-- status: {"number": <string>, "station": <string>, "state" <u8>}
-  > status: 0 - running, 1 - arrived, 2 - left
+- status: {"number": <string>, "station": <string>, "time" <string>}
 
 -> Add Request
   1. POST /routes - input: <route>
