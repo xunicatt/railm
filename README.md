@@ -12,7 +12,7 @@ railm (Railway Mobile), pronounced ‘realm,’ is a cross-platform mobile app p
 make help
 
 # builds whole project
-make RAILAPI_TOKEN=<token> RAILAPI_URL=<url> MAPBOX_TOKEN=<token> 
+make RAILAPI_TOKEN=<token> RAILAPI_URL=<url> MAPBOX_TOKEN=<token> build
 ```
 
 # Binaries
