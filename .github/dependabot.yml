@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "gomod"
     directory: "/railapi"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     groups:
       go-dependencies:
         patterns:
@@ -12,7 +12,7 @@ updates:
   - package-ecosystem: "pub"
     directory: "/railm"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     groups:
       flutter-dependencies:
         patterns:
