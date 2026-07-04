@@ -5,6 +5,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:localstore/localstore.dart';
 import 'package:railm/components/map.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/status.dart';
@@ -43,9 +44,13 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
     List<Plugin> _plugins = [];
     List<StatusViewCard> _cards = [];
 
+    final _db = Localstore.getInstance(useSupportDir: true);
+
     @override
     void initState() {
         super.initState();
+
+        _storeHistory();
 
         final trainDelay = TrainDelay(
             trainNumber: widget.train.number,
@@ -85,6 +90,22 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
     void dispose() {
         _timer?.cancel();
         super.dispose();
+    }
+
+    Future<void> _storeHistory() async {
+        if (widget.srcStationId != null && widget.mapData != null) {
+            final value = await _db.collection("history")
+                            .doc(widget.train.number).get();
+
+            if (value == null) {
+                await _db.collection("history")
+                    .doc(widget.train.number).set({
+                        'map-data': widget.mapData!.toMap(),
+                        'train-number': widget.train.number,
+                        'src-station-id': widget.srcStationId!,
+                    });
+            }
+        }
     }
 
     Future<void> _update() async {

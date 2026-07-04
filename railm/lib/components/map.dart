@@ -26,6 +26,26 @@ class MapData {
         required this.lat2,
         required this.route,
     });
+
+    factory MapData.fromMap(Map<String, dynamic> map) {
+        return MapData(
+            lng1: map['lng1'],
+            lat1: map['lat1'],
+            lng2: map['lng2'],
+            lat2: map['lat2'],
+            route: map['route'],
+        );
+    }
+
+    Map<String, dynamic> toMap() {
+        return {
+            'lng1': lng1,
+            'lat1': lat1,
+            'lng2': lng2,
+            'lat2': lat2,
+            'route': route,
+        };
+    }
 }
 
 class MapView extends StatefulWidget {
