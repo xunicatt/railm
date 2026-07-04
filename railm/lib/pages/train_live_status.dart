@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:railm/components/map.dart';
+import 'package:railm/models/search_history.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/status.dart';
 import 'package:railm/models/train.dart';
@@ -99,11 +100,13 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
 
             if (value == null) {
                 await _db.collection("history")
-                    .doc(widget.train.number).set({
-                        'map-data': widget.mapData!.toMap(),
-                        'train-number': widget.train.number,
-                        'src-station-id': widget.srcStationId!,
-                    });
+                    .doc(widget.train.number).set(
+                        SearchHistory(
+                            trainNumber: widget.train.number,
+                            srcStationId: widget.srcStationId!,
+                            mapData: widget.mapData!,
+                        ).toMap()
+                    );
             }
         }
     }

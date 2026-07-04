@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:railm/components/loading.dart';
+import 'package:railm/models/search_history.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/train.dart';
 import 'package:railm/components/map.dart';
@@ -25,12 +26,14 @@ class TrainHomePage extends StatefulWidget {
 class TrainHomePageState extends State<TrainHomePage> {
     bool _loading = true;
     Map<String, Station> _stations = {};
+    List<SearchHistory> _histories = [];
     final _db = Localstore.getInstance(useSupportDir: true);
 
     @override
     void initState() {
         super.initState();
         _loadStations();
+        _loadHistories();
     }
 
     Future<void> _loadStations() async {
@@ -59,6 +62,20 @@ class TrainHomePageState extends State<TrainHomePage> {
             _stations = data;
             _loading = false;
         });
+    }
+
+    Future<void> _loadHistories() async {
+        final collection = await _db.collection("history").get();
+        List<SearchHistory> data = [];
+        if (collection != null) {
+            for (final entry in collection.entries) {
+                data.add(
+                    SearchHistory.fromMap(entry.value),
+                );
+            }
+        }
+
+        setState(() => _histories = data);
     }
 
     Future<bool> _searchTrain(String? number) async {
