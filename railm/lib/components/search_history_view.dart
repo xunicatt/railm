@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0
+// Author: xunicatt
+// Project: railm (railm) 
+// Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
+
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:railm/models/search_history.dart';
