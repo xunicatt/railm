@@ -102,7 +102,7 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                 await _db.collection("history")
                     .doc(widget.train.number).set(
                         SearchHistory(
-                            trainNumber: widget.train.number,
+                            train: widget.train,
                             srcStationId: widget.srcStationId!,
                             mapData: widget.mapData!,
                         ).toMap()

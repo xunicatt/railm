@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:railm/components/loading.dart';
+import 'package:railm/components/search_history_view.dart';
 import 'package:railm/models/search_history.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/train.dart';
@@ -17,7 +18,10 @@ import 'package:localstore/localstore.dart';
 class TrainHomePage extends StatefulWidget {
     final ValueChanged<ThemeMode> onThemeChanged;
 
-    const TrainHomePage({super.key, required this.onThemeChanged});
+    const TrainHomePage({
+        super.key,
+        required this.onThemeChanged
+    });
 
     @override
     State<StatefulWidget> createState() => TrainHomePageState();
@@ -133,18 +137,33 @@ class TrainHomePageState extends State<TrainHomePage> {
                     ),
                 ),
                 Expanded(
-                    child: 
-                    Center(
+                    child: Center(
                         child: Padding(
-                            padding: .all(20),
+                            padding: .only(
+                                top: 0,
+                                bottom: 20,
+                                left: 20,
+                                right: 20
+                            ),
                             child: Column(
                                 mainAxisAlignment: .center,
                                 crossAxisAlignment: .center,
                                 mainAxisSize: .max,
-                                spacing: 30,
+                                spacing: _histories.isEmpty ? 30 : 10,
                                 children: [
                                     LiveTrainCard(onSearchPressed: _searchTrain),
-                                    FindTrainsCard(stations: _stations),
+                                    FindTrainsCard(
+                                        stations: _stations,
+                                        reloadHistories: _loadHistories,
+                                    ),
+                                    _histories.isNotEmpty ?
+                                    Expanded(
+                                        child: SearchHistoryView(
+                                            stations: _stations,
+                                            histories: _histories,
+                                        ),
+                                    ):
+                                    SizedBox.shrink(),
                                 ]
                             ),
                         ),
@@ -180,7 +199,7 @@ class LiveTrainCardState extends State<LiveTrainCard> {
                     mainAxisSize: .min,
                     children: [
                         LiveTrainCardHeading(),
-                        SizedBox(height: 20),
+                        SizedBox(height: 10),
                         LiveTrainCardNumberField(
                             onSearchPressed: widget.onSearchPressed,
                         ),
@@ -198,7 +217,7 @@ class LiveTrainCardHeading extends StatelessWidget {
         return const Text(
             'Live Train',
             style: .new(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: .w600,
             ),
         );
@@ -259,6 +278,7 @@ class LiveTrainCardNumberFieldState extends State<LiveTrainCardNumberField> {
             },
             decoration: InputDecoration(
                 filled: true,
+                isDense: true,
                 hintText: 'Train Number',
                 suffixIcon: IconButton(
                     onPressed: _value == null ?
@@ -277,8 +297,13 @@ class LiveTrainCardNumberFieldState extends State<LiveTrainCardNumberField> {
 
 class FindTrainsCard extends StatefulWidget {
     final Map<String, Station> stations;
+    final Future<void> Function() reloadHistories;
 
-    const FindTrainsCard({super.key, required this.stations});
+    const FindTrainsCard({
+        super.key,
+        required this.stations,
+        required this.reloadHistories,
+    });
 
     @override
     State<StatefulWidget> createState() => FindTrainsCardState();
@@ -328,8 +353,8 @@ class FindTrainsCardState extends State<FindTrainsCard> {
                         // TODO: pass down the data to show
                         // data and cache it
                         srcStationId: _src!,
-                        onConfirmedClicked: (data) {
-                            Navigator.push<void>(
+                        onConfirmedClicked: (data) async {
+                            await Navigator.push<void>(
                                 context,
                                 MaterialPageRoute<void>(
                                     builder: (context) => TrainListPage(
@@ -340,6 +365,7 @@ class FindTrainsCardState extends State<FindTrainsCard> {
                                     ),
                                 ),
                             );
+                            await widget.reloadHistories();
                         }
                     );
                 },
@@ -359,7 +385,7 @@ class FindTrainsCardState extends State<FindTrainsCard> {
                     mainAxisSize: .min,
                     children: [
                         const FindTrainsCardHeading(),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         FindTrainsCardDropDownMenu(
                             hintText: 'From',
                             onChanged: (x) {
@@ -410,7 +436,7 @@ class FindTrainsCardHeading extends StatelessWidget {
         return const Text(
             'Find Trains',
             style: .new(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: .w600,
             ),
         );
@@ -444,6 +470,7 @@ class FindTrainsCardDropDownMenu extends StatelessWidget {
             menuHeight: 300,
             inputDecorationTheme: InputDecorationTheme(
                 filled: true,
+                isDense: true,
                 border: OutlineInputBorder(
                     borderSide: .none,
                     borderRadius: BorderRadius.all(.circular(10)),
@@ -469,7 +496,7 @@ class FindTrainsCardSearchButton extends StatelessWidget {
     Widget build(BuildContext context) {
         return MaterialButton(
             minWidth: .infinity,
-            height: 50,
+            height: 40,
             color: Colors.blue,
             disabledColor: Colors.grey,
             shape: RoundedRectangleBorder(
@@ -485,7 +512,7 @@ class FindTrainsCardSearchButton extends StatelessWidget {
                     Text(
                         'Search',
                         style: .new(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: .w900,
                             color: Colors.white,
                         ),
@@ -494,6 +521,7 @@ class FindTrainsCardSearchButton extends StatelessWidget {
                         Icons.search,
                         fontWeight: .w900,
                         color: Colors.white,
+                        size: 20,
                     ),
                 ],
             ),
