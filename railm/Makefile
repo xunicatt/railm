@@ -7,9 +7,7 @@ FLUTTER ?= flutter
 BUILD ?= build
 RAILM ?= .
 
-DATE := $(shell date +%y%m)
-BUILDVER := $(shell cat ../.build)
-VERSION ?= v$(DATE).$(BUILDVER)
+VERSION ?= $(shell cat ../version)
 
 RAILAPI_URL ?=
 RAILAPI_TOKEN ?=

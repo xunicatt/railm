@@ -15,9 +15,7 @@ BUILD ?= $(PWD)/build
 RAILAPI := $(PWD)/railapi
 RAILM := $(PWD)/railm
 
-DATE := $(shell date +%y%m)
-BUILDVER = $(shell cat .build)
-VERSION = v$(DATE).$(BUILDVER)
+VERSION = $(shell cat version)
 
 .PHONY: all pre-build railapi railm help version
 
@@ -41,16 +39,22 @@ help:
 	@echo "    MAPBOX_TOKEN                         Token for Mapbox APIs."
 	@echo "    RELEASE=<yes/no>                     Auto increments build number."
 
-TARGETS =
-
 ifeq ($(RELEASE), yes)
-	TARGETS += pre-build
+  VCODE := $(shell echo $(VERSION) | cut -c2-5)
+  CCODE := $(shell date +%y%m)
+  BUILDVER := $(shell echo $(VERSION) | cut -d. -f2)
+
+  ifeq ($(shell [ $(CCODE) -gt $(VCODE) ] && echo "OK"),OK)
+    BUILDVER := 0
+  else
+    BUILDVER := $(shell expr $(BUILDVER) + 1)
+  endif
+
+  VERSION := v$(CCODE).$(BUILDVER)
+  $(file >version,$(VERSION))
 endif
 
 TARGETS += railapi railm
-
-pre-build: .build
-	@echo `bc -e "$(BUILDVER) + 1"` > .build
 
 build: $(TARGETS)
 

@@ -7,9 +7,7 @@ GO ?= go
 BUILD ?= build
 RAILAPI ?= .
 
-DATE := $(shell date +%y%m)
-BUILDVER := $(shell cat ../.build)
-VERSION ?= v$(DATE).$(BUILDVER)
+VERSION ?= $(shell cat ../version)
 
 PORT ?=
 TURSO_DATABASE_URL ?=
