@@ -124,8 +124,8 @@ class TrainHomePageState extends State<TrainHomePage> {
                     padding: .only(right: 10),
                     child: IconButton(
                         icon: Icon(Icons.settings),
-                        onPressed: () {
-                            Navigator.push(
+                        onPressed: () async {
+                            await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => Settings(
@@ -133,6 +133,7 @@ class TrainHomePageState extends State<TrainHomePage> {
                                     ),
                                 ),
                             );
+                            await _loadHistories();
                         },
                     ),
                 ),

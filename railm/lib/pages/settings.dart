@@ -27,6 +27,7 @@ class Settings extends StatelessWidget {
                                 onThemeChanged: onThemeChanged,
                             ),
                             SettingCacheOptions(),
+                            SettingAutoRefresh(),
                         ],
                     ),
                 ),
@@ -167,83 +168,69 @@ class SettingCacheOptions extends StatefulWidget {
 
 
 class SettingCacheOptionsState extends State<SettingCacheOptions> {
-    bool _autoRefresh = false;
     final _db = Localstore.getInstance(useSupportDir: true);
-
-    @override
-    void initState() {
-        super.initState();
-        _loadAutoRefresh();
-    }
-
-    Future<void> _loadAutoRefresh() async {
-        final data = await _db.collection("settings")
-            .doc("auto-refresh")
-            .get() ?? {
-                'value': false,
-            };
-
-        setState(() {
-            _autoRefresh = data['value'];
-        });
-    }
 
     @override
     Widget build(BuildContext context) {
         return SettingsMenuList(
-            heading: 'Cache',
+            heading: 'Data',
             disablePadding: true,
             widgets: [
                 SettingCacheOptionsButton(
-                    text: 'Clear Train Cache',
+                    text: 'Delete Train data',
+                    icon: Icon(
+                        Icons.train,
+                        color: Colors.blue[400],
+                    ),
+                    buttonIcon: Icon(
+                        Icons.delete,
+                        color: Colors.red[400],
+                    ),
                     onPressed: () {
                         _db.collection("trains").delete();
                     },
                 ),
                 SettingCacheOptionsButton(
-                    text: 'Clear Station Cache',
+                    text: 'Delete Station data',
+                    icon: Icon(
+                        Icons.subway,
+                        color: Colors.green[400],
+                    ),
+                    buttonIcon: Icon(
+                        Icons.delete,
+                        color: Colors.red[400],
+                    ),
                     onPressed: () {
                         _db.collection("stations").delete();
                     },
                 ),
                 SettingCacheOptionsButton(
-                    text: 'Clear Station Location Cache',
+                    text: 'Delete Location data',
+                    icon: Icon(
+                        Icons.location_on,
+                        color: Colors.indigo[400],
+                    ),
+                    buttonIcon: Icon(
+                        Icons.delete,
+                        color: Colors.red[400],
+                    ),
                     onPressed: () {
                         _db.collection("station-locations").delete();
                     },
                 ),
-                Padding(
-                    padding: .symmetric(horizontal: 10),
-                    child: Row(
-                        mainAxisAlignment: .spaceBetween,
-                        crossAxisAlignment: .center,
-                        children: [
-                            Text(
-                                'Auto refresh',
-                                style: .new(
-                                    fontSize: 16,
-                                    fontWeight: .w400,
-                                ),
-                            ),
-                            Switch(
-                                activeThumbColor: Colors.blue,
-                                value: _autoRefresh,
-
-                                onChanged: (x) {
-                                    setState(() {
-                                        _autoRefresh = x; 
-                                    });
-
-                                    _db.collection("settings")
-                                        .doc("auto-refresh")
-                                        .set({
-                                            'value': x,
-                                            'last-cached': DateTime.now().toIso8601String(),
-                                        });
-                                },
-                            ),
-                        ],
+                SettingCacheOptionsButton(
+                    text: 'Delete Search history',
+                    icon: Icon(
+                        Icons.history,
+                        color: Colors.cyan[400],
                     ),
+                    buttonIcon: Icon(
+                        Icons.delete,
+                        color: Colors.red[400],
+                    ),
+                    onPressed: () {
+                        _db.collection("history").delete();
+                    },
                 ),
             ],
         );
@@ -253,32 +240,40 @@ class SettingCacheOptionsState extends State<SettingCacheOptions> {
 class SettingCacheOptionsButton extends StatelessWidget {
     final String text;
     final VoidCallback? onPressed;
+    final Icon icon;
+    final Icon buttonIcon;
 
     const SettingCacheOptionsButton({
         super.key,
         required this.text,
+        required this.icon,
+        required this.buttonIcon,
         this.onPressed,
     });
 
     @override
     Widget build(BuildContext context) {
-        return MaterialButton(
-            shape: RoundedRectangleBorder(
-                borderRadius: .all(.circular(10)),
-            ),
-            padding: .zero,
-            onPressed: onPressed,
-            child: Container(
-                alignment: .centerStart,
-                padding: .only(left: 10),
-                child: Text(
-                    text,
-                    style: .new(
-                        fontSize: 16,
-                        fontWeight: .w400,
+        return Container(
+            padding: .only(left: 8),
+            child: Row(
+                mainAxisAlignment: .start,
+                children: [
+                    icon,
+                    SizedBox(width: 8),
+                    Text(
+                        text,
+                        style: .new(
+                            fontSize: 16,
+                            fontWeight: .w400,
+                        ),
                     ),
-                ),
-            ),
+                    Spacer(),
+                    IconButton(
+                        onPressed: onPressed,
+                        icon: buttonIcon,
+                    ),
+                ],
+            ), 
         );
     }
 }
@@ -330,6 +325,88 @@ class SettingsMenuList extends StatelessWidget {
                                     thickness: 1,
                                 );
                             },
+                        ),
+                    ],
+                ),
+            ),
+        );
+    }
+}
+
+class SettingAutoRefresh extends StatefulWidget {
+    const SettingAutoRefresh({super.key});
+
+    @override
+    State<SettingAutoRefresh> createState() => SettingAutoRefreshState();
+}
+
+class SettingAutoRefreshState extends State<SettingAutoRefresh> {
+    bool _autoRefresh = false;
+    final _db = Localstore.getInstance(useSupportDir: true);
+
+    @override
+    void initState() {
+        super.initState();
+        _loadAutoRefresh();
+    }
+
+    Future<void> _loadAutoRefresh() async {
+        final data = await _db.collection("settings")
+            .doc("auto-refresh")
+            .get() ?? {
+                'value': false,
+            };
+
+        setState(() {
+            _autoRefresh = data['value'];
+        });
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return Card(
+            child: Padding(
+                padding: .all(10),
+                child: Column(
+                    children: [
+                        Row(
+                            mainAxisAlignment: .spaceBetween,
+                            crossAxisAlignment: .center,
+                            children: [
+                                Text(
+                                    'Auto refresh',
+                                    style: .new(
+                                        fontSize: 16,
+                                        fontWeight: .w600,
+                                    ),
+                                ),
+                                Switch(
+                                    activeThumbColor: Colors.blue,
+                                    value: _autoRefresh,
+
+                                    onChanged: (x) {
+                                        setState(() {
+                                            _autoRefresh = x; 
+                                        });
+
+                                        _db.collection("settings")
+                                            .doc("auto-refresh")
+                                            .set({
+                                                'value': x,
+                                                'last-cached': DateTime.now().toIso8601String(),
+                                            });
+                                    },
+                                ),
+                            ],
+                        ),
+                        Padding(
+                            padding: .only(right: 80),
+                            child: Text(
+                                'Automatically updates the stored cache from the server once a week.',
+                                style: .new(
+                                    fontSize: 12,
+                                ),
+                            ),
                         ),
                     ],
                 ),
