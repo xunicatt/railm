@@ -37,7 +37,12 @@ class TrafficDelay extends Plugin {
         );
 
         final routes = trafficData['routes'];
-        final route = routes[data!.route];
+        final selectedRoute = data!.getMatchedRouteIndex(routes);
+        if (selectedRoute == -1) {
+            return 0;
+        }
+
+        final route = routes[selectedRoute];
         final delay = (
             (route['duration'] / 60).floor() - travelDelay!.value!
         );

@@ -10,6 +10,7 @@ import 'package:localstore/localstore.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:railm/components/loading.dart';
 import 'package:railm/configs/configs.dart';
+import 'package:collection/collection.dart';
 import 'package:http/http.dart' as http;
 
 class MapData {
@@ -17,14 +18,15 @@ class MapData {
     final num lat1;
     final num lng2;
     final num lat2;
-    final int route;
+    final List<dynamic> coord;
+    static const eq = DeepCollectionEquality();
 
     const MapData({
         required this.lng1,
         required this.lat1,
         required this.lng2,
         required this.lat2,
-        required this.route,
+        required this.coord,
     });
 
     factory MapData.fromMap(Map<String, dynamic> map) {
@@ -33,7 +35,7 @@ class MapData {
             lat1: map['lat1'],
             lng2: map['lng2'],
             lat2: map['lat2'],
-            route: map['route'],
+            coord: map['coord'],
         );
     }
 
@@ -43,8 +45,22 @@ class MapData {
             'lat1': lat1,
             'lng2': lng2,
             'lat2': lat2,
-            'route': route,
+            'coord': coord,
         };
+    }
+
+    int getMatchedRouteIndex(List<dynamic> routes) {
+        for (var i = 0; i < routes.length; i++) {
+            final route = routes[i];
+            if (eq.equals(
+                route['geometry']['coordinates'],
+                coord,
+            )) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
 
@@ -300,7 +316,7 @@ class MapViewState extends State<MapView> {
                                         lat1: _lat1!,
                                         lng2: _lng2!,
                                         lat2: _lat2!,
-                                        route: _selectedRouted,
+                                        coord: _routes[_selectedRouted]['geometry']['coordinates'],
                                     ),
                                 );
                             },

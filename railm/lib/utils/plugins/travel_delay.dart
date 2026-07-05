@@ -35,8 +35,12 @@ class TravelDelay extends Plugin {
             data!.lat2,
         );
         final routes = travelData['routes'];
-        final route = routes[data!.route];
+        final selectedRoute = data!.getMatchedRouteIndex(routes);
+        if (selectedRoute == -1) {
+            return 0;
+        }
 
+        final route = routes[selectedRoute];
         value = (route['duration'] / 60).floor();
 
         return value!;
