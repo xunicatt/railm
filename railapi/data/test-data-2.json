@@ -3,7 +3,7 @@
   "trains": [
   {
     "number": "37812",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -46,7 +46,7 @@
   },
   {
     "number": "37814",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -89,7 +89,7 @@
   },
   {
     "number": "37816",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -132,7 +132,7 @@
   },
   {
     "number": "37818",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -175,7 +175,7 @@
   },
   {
     "number": "37820",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -218,7 +218,7 @@
   },
   {
     "number": "37824",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -261,7 +261,7 @@
   },
   {
     "number": "37826",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -304,12 +304,12 @@
   },
   {
     "number": "37612",
-    "name": "PDA Howrah LOCAL",
-    "start": "bwn",
+    "name": "Pandooah Howrah Local",
+    "start": "pda",
     "end": "hwh",
     "stops": [
 
-      { "station": "pda", "route": "bwn-hwh", "arrival": "09:04", "departure": "09:04" },
+      { "station": "pda", "route": "bwn-hwh", "arrival": "--:--", "departure": "09:04" },
       { "station": "khn", "route": "bwn-hwh", "arrival": "09:09", "departure": "09:09" },
       { "station": "tlo", "route": "bwn-hwh", "arrival": "09:14", "departure": "09:14" },
       { "station": "mug", "route": "bwn-hwh", "arrival": "09:17", "departure": "09:17" },
@@ -337,7 +337,7 @@
   },
   {
     "number": "37828",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -381,7 +381,7 @@
   },
   {
     "number": "37830",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -425,7 +425,7 @@
   },
   {
     "number": "37832",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -469,17 +469,11 @@
   },
   {
     "number": "37652",
-    "name": "MYM Howrah FAST",
-    "start": "bwn",
+    "name": "Memari Howrah Fast",
+    "start": "mym",
     "end": "hwh",
     "stops": [
-      { "station": "bwn", "route": "bwn-hwh", "arrival": "--:--", "departure": "10:54" },
-      { "station": "grp", "route": "bwn-hwh", "arrival": "10:59", "departure": "10:59" },
-      { "station": "skg", "route": "bwn-hwh", "arrival": "11:03", "departure": "11:03" },
-      { "station": "plae", "route": "bwn-hwh", "arrival": "11:07", "departure": "11:07" },
-      { "station": "rslr", "route": "bwn-hwh", "arrival": "11:12", "departure": "11:12" },
-      { "station": "nmf", "route": "bwn-hwh", "arrival": "11:15", "departure": "11:15" },
-      { "station": "mym", "route": "bwn-hwh", "arrival": "11:18", "departure": "11:18" },
+      { "station": "mym", "route": "bwn-hwh", "arrival": "--:--", "departure": "11:18" },
       { "station": "bgf", "route": "bwn-hwh", "arrival": "11:22", "departure": "11:22" },
       { "station": "dbp", "route": "bwn-hwh", "arrival": "11:25", "departure": "11:25" },
       { "station": "boi", "route": "bwn-hwh", "arrival": "11:30", "departure": "11:30" },
@@ -513,7 +507,7 @@
   },
   {
     "number": "37834",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -557,7 +551,7 @@
   },
   {
     "number": "37836",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -601,23 +595,11 @@
   },
   {
     "number": "37614",
-    "name": "PDA Howrah LOCAL",
-    "start": "bwn",
+    "name": "Pandooah Howrah Local",
+    "start": "pda",
     "end": "hwh",
     "stops": [
-      { "station": "bwn", "route": "bwn-hwh", "arrival": "--:--", "departure": "12:53" },
-      { "station": "grp", "route": "bwn-hwh", "arrival": "12:58", "departure": "12:58" },
-      { "station": "skg", "route": "bwn-hwh", "arrival": "13:02", "departure": "13:02" },
-      { "station": "plae", "route": "bwn-hwh", "arrival": "13:06", "departure": "13:06" },
-      { "station": "rslr", "route": "bwn-hwh", "arrival": "13:11", "departure": "13:11" },
-      { "station": "nmf", "route": "bwn-hwh", "arrival": "13:14", "departure": "13:14" },
-      { "station": "mym", "route": "bwn-hwh", "arrival": "13:17", "departure": "13:17" },
-      { "station": "bgf", "route": "bwn-hwh", "arrival": "13:21", "departure": "13:21" },
-      { "station": "dbp", "route": "bwn-hwh", "arrival": "13:24", "departure": "13:24" },
-      { "station": "boi", "route": "bwn-hwh", "arrival": "13:29", "departure": "13:29" },
-      { "station": "bcgm", "route": "bwn-hwh", "arrival": "13:32", "departure": "13:32" },
-      { "station": "slg", "route": "bwn-hwh", "arrival": "13:34", "departure": "13:34" },
-      { "station": "pda", "route": "bwn-hwh", "arrival": "13:38", "departure": "13:38" },
+      { "station": "pda", "route": "bwn-hwh", "arrival": "--:--", "departure": "13:38" },
       { "station": "khn", "route": "bwn-hwh", "arrival": "13:43", "departure": "13:43" },
       { "station": "tlo", "route": "bwn-hwh", "arrival": "13:48", "departure": "13:48" },
       { "station": "mug", "route": "bwn-hwh", "arrival": "13:51", "departure": "13:51" },
@@ -645,7 +627,7 @@
   },
   {
     "number": "37838",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -689,11 +671,11 @@
   },
   {
     "number": "37656",
-    "name": "MYM Howrah LOCAL",
+    "name": "Memari Howrah Local",
     "start": "mym",
     "end": "hwh",
     "stops": [
-      { "station": "mym", "route": "bwn-hwh", "arrival": "15:04", "departure": "15:04" },
+      { "station": "mym", "route": "bwn-hwh", "arrival": "--:--", "departure": "15:04" },
       { "station": "bgf", "route": "bwn-hwh", "arrival": "15:08", "departure": "15:08" },
       { "station": "dbp", "route": "bwn-hwh", "arrival": "15:11", "departure": "15:11" },
       { "station": "boi", "route": "bwn-hwh", "arrival": "15:16", "departure": "15:16" },
@@ -726,52 +708,8 @@
     ]
   },
   {
-    "number": "31152",
-    "name": "Barddhaman SDAH LOCAL",
-    "start": "bwn",
-    "end": "hwh",
-    "stops": [
-      { "station": "bwn", "route": "bwn-hwh", "arrival": "--:--", "departure": "14:49" },
-      { "station": "grp", "route": "bwn-hwh", "arrival": "14:54", "departure": "14:54" },
-      { "station": "skg", "route": "bwn-hwh", "arrival": "14:58", "departure": "14:58" },
-      { "station": "plae", "route": "bwn-hwh", "arrival": "15:02", "departure": "15:02" },
-      { "station": "rslr", "route": "bwn-hwh", "arrival": "15:07", "departure": "15:07" },
-      { "station": "nmf", "route": "bwn-hwh", "arrival": "15:10", "departure": "15:10" },
-      { "station": "mym", "route": "bwn-hwh", "arrival": "15:13", "departure": "15:13" },
-      { "station": "bgf", "route": "bwn-hwh", "arrival": "15:17", "departure": "15:17" },
-      { "station": "dbp", "route": "bwn-hwh", "arrival": "15:20", "departure": "15:20" },
-      { "station": "boi", "route": "bwn-hwh", "arrival": "15:25", "departure": "15:25" },
-      { "station": "bcgm", "route": "bwn-hwh", "arrival": "15:28", "departure": "15:28" },
-      { "station": "slg", "route": "bwn-hwh", "arrival": "15:30", "departure": "15:30" },
-      { "station": "pda", "route": "bwn-hwh", "arrival": "15:35", "departure": "15:35" },
-      { "station": "khn", "route": "bwn-hwh", "arrival": "15:39", "departure": "15:39" },
-      { "station": "tlo", "route": "bwn-hwh", "arrival": "15:44", "departure": "15:44" },
-      { "station": "mug", "route": "bwn-hwh", "arrival": "15:47", "departure": "15:47" },
-      { "station": "adst", "route": "bwn-hwh", "arrival": "15:51", "departure": "15:51" },
-      { "station": "bdc", "route": "bwn-hwh", "arrival": "15:56", "departure": "15:56" },
-      { "station": "hgy", "route": "bwn-hwh", "arrival": "16:07", "departure": "16:07" },
-      { "station": "cns", "route": "bwn-hwh", "arrival": "16:10", "departure": "16:10" },
-      { "station": "cgr", "route": "bwn-hwh", "arrival": "16:13", "departure": "16:13" },
-      { "station": "muu", "route": "bwn-hwh", "arrival": "16:16", "departure": "16:16" },
-      { "station": "bhr", "route": "bwn-hwh", "arrival": "16:18", "departure": "16:18" },
-      { "station": "muu", "route": "bwn-hwh", "arrival": "16:22", "departure": "16:22" },
-      { "station": "bbae", "route": "bwn-hwh", "arrival": "16:26", "departure": "16:26" },
-      { "station": "she", "route": "bwn-hwh", "arrival": "16:28", "departure": "16:28" },
-      { "station": "srp", "route": "bwn-hwh", "arrival": "16:32", "departure": "16:32" },
-      { "station": "ris", "route": "bwn-hwh", "arrival": "16:35", "departure": "16:35" },
-      { "station": "kog", "route": "bwn-hwh", "arrival": "16:38", "departure": "16:38" },
-      { "station": "hmz", "route": "bwn-hwh", "arrival": "16:41", "departure": "16:41" },
-      { "station": "upa", "route": "bwn-hwh", "arrival": "16:43", "departure": "16:43" },
-      { "station": "bly", "route": "bwn-hwh", "arrival": "16:46", "departure": "16:46" },
-      { "station": "beq", "route": "bwn-hwh", "arrival": "16:49", "departure": "16:49" },
-      { "station": "llh", "route": "bwn-hwh", "arrival": "16:52", "departure": "16:57" },
-            { "station": "hwh", "route": "bwn-hwh", "arrival": "17:05", "departure": "--:--" }
-
-    ]
-  },
-  {
     "number": "37840",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -814,62 +752,13 @@
     ]
   },
   {
-    "number": "63142",
-    "name": "GODA SDAH MEMU",
-    "start": "bwn",
-    "end": "hwh",
-    "stops": [
-      { "station": "bwn", "route": "bwn-hwh", "arrival": "--:--", "departure": "15:25" },
-      { "station": "grp", "route": "bwn-hwh", "arrival": "15:30", "departure": "15:30" },
-      { "station": "skg", "route": "bwn-hwh", "arrival": "15:34", "departure": "15:34" },
-      { "station": "plae", "route": "bwn-hwh", "arrival": "15:38", "departure": "15:38" },
-      { "station": "rslr", "route": "bwn-hwh", "arrival": "15:43", "departure": "15:43" },
-      { "station": "nmf", "route": "bwn-hwh", "arrival": "15:46", "departure": "15:46" },
-      { "station": "mym", "route": "bwn-hwh", "arrival": "15:49", "departure": "15:49" },
-      { "station": "bgf", "route": "bwn-hwh", "arrival": "15:53", "departure": "15:53" },
-      { "station": "dbp", "route": "bwn-hwh", "arrival": "15:56", "departure": "15:56" },
-      { "station": "boi", "route": "bwn-hwh", "arrival": "16:01", "departure": "16:01" },
-      { "station": "bcgm", "route": "bwn-hwh", "arrival": "16:04", "departure": "16:04" },
-      { "station": "slg", "route": "bwn-hwh", "arrival": "16:06", "departure": "16:06" },
-      { "station": "pda", "route": "bwn-hwh", "arrival": "16:11", "departure": "16:11" },
-      { "station": "khn", "route": "bwn-hwh", "arrival": "16:15", "departure": "16:15" },
-      { "station": "tlo", "route": "bwn-hwh", "arrival": "16:20", "departure": "16:20" },
-      { "station": "mug", "route": "bwn-hwh", "arrival": "16:23", "departure": "16:23" },
-      { "station": "adst", "route": "bwn-hwh", "arrival": "16:27", "departure": "16:27" },
-      { "station": "bdc", "route": "bwn-hwh", "arrival": "16:32", "departure": "16:32" },
-      { "station": "hgy", "route": "bwn-hwh", "arrival": "16:43", "departure": "16:43" },
-      { "station": "cns", "route": "bwn-hwh", "arrival": "16:46", "departure": "16:46" },
-      { "station": "cgr", "route": "bwn-hwh", "arrival": "16:49", "departure": "16:49" },
-      { "station": "muu", "route": "bwn-hwh", "arrival": "16:52", "departure": "16:52" },
-      { "station": "bhr", "route": "bwn-hwh", "arrival": "16:54", "departure": "16:54" },
-      { "station": "muu", "route": "bwn-hwh", "arrival": "16:58", "departure": "16:58" },
-      { "station": "bbae", "route": "bwn-hwh", "arrival": "17:02", "departure": "17:02" },
-      { "station": "she", "route": "bwn-hwh", "arrival": "17:04", "departure": "17:04" },
-      { "station": "srp", "route": "bwn-hwh", "arrival": "17:08", "departure": "17:08" },
-      { "station": "ris", "route": "bwn-hwh", "arrival": "17:11", "departure": "17:11" },
-      { "station": "kog", "route": "bwn-hwh", "arrival": "17:14", "departure": "17:14" },
-      { "station": "hmz", "route": "bwn-hwh", "arrival": "17:17", "departure": "17:17" },
-      { "station": "upa", "route": "bwn-hwh", "arrival": "17:19", "departure": "17:19" },
-      { "station": "bly", "route": "bwn-hwh", "arrival": "17:22", "departure": "17:22" },
-      { "station": "beq", "route": "bwn-hwh", "arrival": "17:25", "departure": "17:25" },
-      { "station": "llh", "route": "bwn-hwh", "arrival": "17:28", "departure": "17:35" },
-            { "station": "hwh", "route": "bwn-hwh", "arrival": "17:45", "departure": "--:--" }
-
-    ]
-  },
-  {
     "number": "37658",
-    "name": "MYM Howrah LOCAL",
-    "start": "bwn",
+    "name": "Memari Howrah Local",
+    "start": "mym",
     "end": "hwh",
     "stops": [
-      { "station": "bwn", "route": "bwn-hwh", "arrival": "--:--", "departure": "15:49" },
-      { "station": "grp", "route": "bwn-hwh", "arrival": "15:54", "departure": "15:54" },
-      { "station": "skg", "route": "bwn-hwh", "arrival": "15:58", "departure": "15:58" },
-      { "station": "plae", "route": "bwn-hwh", "arrival": "16:02", "departure": "16:02" },
-      { "station": "rslr", "route": "bwn-hwh", "arrival": "16:07", "departure": "16:07" },
-      { "station": "nmf", "route": "bwn-hwh", "arrival": "16:10", "departure": "16:10" },
-      { "station": "mym", "route": "bwn-hwh", "arrival": "16:13", "departure": "16:13" },
+      
+      { "station": "mym", "route": "bwn-hwh", "arrival": "--:--", "departure": "16:13" },
       { "station": "bgf", "route": "bwn-hwh", "arrival": "16:17", "departure": "16:17" },
       { "station": "dbp", "route": "bwn-hwh", "arrival": "16:20", "departure": "16:20" },
       { "station": "boi", "route": "bwn-hwh", "arrival": "16:25", "departure": "16:25" },
@@ -903,7 +792,7 @@
   },
   {
     "number": "37842",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -947,7 +836,7 @@
   },
   {
     "number": "37844",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -991,7 +880,7 @@
   },
   {
     "number": "37846",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -1035,7 +924,7 @@
   },
   {
     "number": "37848",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -1079,7 +968,7 @@
   },
   {
     "number": "37850",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -1123,7 +1012,7 @@
   },
   {
     "number": "37852",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
@@ -1167,7 +1056,7 @@
   },
   {
     "number": "37854",
-    "name": "Barddhaman Howrah LOCAL",
+    "name": "Barddhaman Howrah Local",
     "start": "bwn",
     "end": "hwh",
     "stops": [
