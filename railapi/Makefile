@@ -69,7 +69,7 @@ $(BUILD)/railapi-linux-arm64-$(VERSION): $(RAILAPI)/cmd/server/main.go
 	GOOS=linux GOARCH=arm64 $(GO) build -o $@ $<
 
 $(BUILD)/railapi-darwin-arm64-$(VERSION): $(RAILAPI)/cmd/server/main.go
-	GOOS=linux GOARCH=arm64 $(GO) build -o $@ $<
+	GOOS=darwin GOARCH=arm64 $(GO) build -o $@ $<
 
 clean:
 	rm -rf $(BUILD)/server
