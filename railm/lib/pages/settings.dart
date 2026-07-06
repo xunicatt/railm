@@ -16,23 +16,32 @@ class Settings extends StatelessWidget {
     Widget build(BuildContext context) {
         return Scaffold(
             body: SafeArea(
-                child: Padding(
-                    padding: .all(10),
-                    child: Column(
-                        spacing: 10,
-                        mainAxisAlignment: .start,
-                        crossAxisAlignment: .start,
-                        children: [
-                            SettingsHeading(),
-                            SettingThemeOptions(
-                                onThemeChanged: onThemeChanged,
+                child: CustomScrollView(
+                    slivers: [
+                        SliverPadding(
+                            padding: const EdgeInsets.all(10),
+                            sliver: SliverToBoxAdapter(
+                                child: Column(
+                                    spacing: 10,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                        SettingsHeading(),
+                                        SettingThemeOptions(onThemeChanged: onThemeChanged),
+                                        SettingCacheOptions(),
+                                        SettingAutoRefresh(),
+                                        SettingCheckForUpdates(),
+                                    ],
+                                ),
                             ),
-                            SettingCacheOptions(),
-                            SettingAutoRefresh(),
-                            Spacer(),
-                            AppVersion(),
-                        ],
-                    ),
+                        ),
+                        const SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: AppVersion(),
+                            ),
+                        ),
+                    ],
                 ),
             ),
         );
@@ -406,6 +415,84 @@ class SettingAutoRefreshState extends State<SettingAutoRefresh> {
                             padding: .only(right: 80),
                             child: Text(
                                 'Automatically updates the stored cache from the server once a week.',
+                                style: .new(
+                                    fontSize: 12,
+                                ),
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+        );
+    }
+}
+
+class SettingCheckForUpdates extends StatefulWidget {
+    const SettingCheckForUpdates({super.key});
+
+    @override
+    State<SettingCheckForUpdates> createState() => SettingCheckForUpdatesState();
+}
+
+class SettingCheckForUpdatesState extends State<SettingCheckForUpdates> {
+    bool _checkForUpdate = false;
+    final _db = Localstore.getInstance(useSupportDir: true);
+
+    @override
+    void initState() {
+        super.initState();
+        _loadCheckForUpdate();
+    }
+
+    Future<void> _loadCheckForUpdate() async {
+        final data = await _db.collection("settings")
+            .doc("check-for-updates")
+            .get() ?? {
+                'value': true,
+            };
+
+        setState(() {
+            _checkForUpdate = data['value'];
+        });
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return Card(
+            child: Padding(
+                padding: .all(10),
+                child: Column(
+                    children: [
+                        Row(
+                            mainAxisAlignment: .spaceBetween,
+                            crossAxisAlignment: .center,
+                            children: [
+                                Text(
+                                    'Check for Updates',
+                                    style: .new(
+                                        fontSize: 16,
+                                        fontWeight: .w600,
+                                    ),
+                                ),
+                                Switch(
+                                    activeThumbColor: Colors.blue,
+                                    value: _checkForUpdate,
+                                    onChanged: (x) {
+                                        setState(() {
+                                            _checkForUpdate = x; 
+                                        });
+
+                                        _db.collection("settings")
+                                            .doc("check-for-updates")
+                                            .set({'value': x});
+                                    },
+                                ),
+                            ],
+                        ),
+                        Padding(
+                            padding: .only(right: 80),
+                            child: Text(
+                                'Automatically checks for app updates at launch.', 
                                 style: .new(
                                     fontSize: 12,
                                 ),

@@ -45,6 +45,12 @@ class TrainHomePageState extends State<TrainHomePage> {
     }
 
     Future<void> _checkForUpdate() async {
+        final checkForUpdate = await _db.collection("settings")
+                                    .doc("check-for-updates").get();
+        if (checkForUpdate != null && checkForUpdate['value'] == false) {
+            return; 
+        }
+
         final url = Configs.githubVersionUrl;
         final resp = await http.get(Uri.parse(url));
 
