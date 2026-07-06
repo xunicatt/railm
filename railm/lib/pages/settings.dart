@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
+import 'package:railm/configs/configs.dart';
 
 class Settings extends StatelessWidget {
     final ValueChanged<ThemeMode> onThemeChanged;
@@ -28,6 +29,8 @@ class Settings extends StatelessWidget {
                             ),
                             SettingCacheOptions(),
                             SettingAutoRefresh(),
+                            Spacer(),
+                            AppVersion(),
                         ],
                     ),
                 ),
@@ -411,6 +414,26 @@ class SettingAutoRefreshState extends State<SettingAutoRefresh> {
                     ],
                 ),
             ),
+        );
+    }
+}
+
+class AppVersion extends StatelessWidget {
+    const AppVersion({super.key});
+
+    @override
+    Widget build(BuildContext context) {
+        return Row(
+            mainAxisAlignment: .center,
+            children: [
+                Text(
+                    Configs.appVersion,
+                    style: .new(
+                        fontSize: 14,
+                        color: Colors.grey,
+                    ),
+                ),
+            ],
         );
     }
 }

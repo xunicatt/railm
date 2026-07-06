@@ -85,27 +85,32 @@ $(BUILD)/railm-ios-$(VERSION).ipa: $(RAILM)/build/ios/archive/Runner.xcarchive/P
 
 $(RAILM)/build/app/outputs/apk/release/app-release.apk:
 	$(FLUTTER) build apk --release \
-    	--dart-define=URL=$(RAILAPI_URL) \
-        --dart-define=TOKEN=$(RAILAPI_TOKEN) \
-        --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN)
+    	--dart-define=RAILAPI_URL=$(RAILAPI_URL) \
+        --dart-define=RAILAPI_TOKEN=$(RAILAPI_TOKEN) \
+        --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN) \
+        --dart-define=RAILM_APP_VERSION=$(VERSION)
+
 
 $(RAILM)/build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app:
 	$(FLUTTER) build ipa --release --no-codesign \
-    	--dart-define=URL=$(RAILAPI_URL) \
-        --dart-define=TOKEN=$(RAILAPI_TOKEN) \
-        --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN)
+    	--dart-define=RAILAPI_URL=$(RAILAPI_URL) \
+        --dart-define=RAILAPI_TOKEN=$(RAILAPI_TOKEN) \
+        --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN) \
+        --dart-define=RAILM_APP_VERSION=$(VERSION)
 
 run-debug:
 	$(FLUTTER) run \
-    	--dart-define=URL=$(RAILAPI_URL) \
-        --dart-define=TOKEN=$(RAILAPI_TOKEN) \
-        --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN)
+    	--dart-define=RAILAPI_URL=$(RAILAPI_URL) \
+        --dart-define=RAILAPI_TOKEN=$(RAILAPI_TOKEN) \
+        --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN) \
+        --dart-define=RAILM_APP_VERSION=$(VERSION)-debug
 
 run-release:
 	$(FLUTTER) run --release \
-    	--dart-define=URL=$(RAILAPI_URL) \
-        --dart-define=TOKEN=$(RAILAPI_TOKEN) \
-        --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN)
+    	--dart-define=RAILAPI_URL=$(RAILAPI_URL) \
+        --dart-define=RAILAPI_TOKEN=$(RAILAPI_TOKEN) \
+        --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN) \
+        --dart-define=RAILM_APP_VERSION=$(VERSION)
 
 clean:
 	flutter clean
