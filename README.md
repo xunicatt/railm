@@ -1,4 +1,12 @@
-# railm (Railway Mobile)
+<!-- SPDX-License-Identifier: GPL-2.0 -->
+<!-- Author: xunicatt -->
+<!-- Project: railm -->
+<!-- Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com> -->
+
+<h1>
+  <img src="assets/railm.png" alt="Railm Logo" width="48" align="absmiddle">
+  railm (Railway Mobile)
+</h1>
 
 railm (Railway Mobile), pronounced ‘realm,’ is a cross-platform mobile app project for smart railway tracking and railway database management.
 
