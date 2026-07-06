@@ -317,6 +317,18 @@ class FindTrainsCardState extends State<FindTrainsCard> {
     final FocusNode _fromFocus = FocusNode();
     final FocusNode _toFocus = FocusNode();
 
+    final _fromController = TextEditingController();
+    final _toController = TextEditingController();
+
+    @override 
+    void dispose() {
+        _fromFocus.dispose();
+        _toFocus.dispose();
+        _fromController.dispose();
+        _toController.dispose();
+        super.dispose();
+    }
+
     VoidCallback? _onSearchButtonPressed() {
         if (_src == null || _dest == null) {
             return null;
@@ -373,6 +385,26 @@ class FindTrainsCardState extends State<FindTrainsCard> {
             );
         };
     }
+
+    VoidCallback? _onSwapButtonPressed() {
+        if (_src == null || _dest == null) {
+            return null;
+        }
+
+        return () {
+            final dest = _dest;
+            setState(() {
+                _dest = _src;
+                _src = dest;
+            });
+
+            final fromStationName = widget.stations[_src!]!.name;
+            _fromController.text = '$fromStationName (${_src!.toUpperCase()})';
+
+            final toStationName = widget.stations[_dest!]!.name;
+            _toController.text = '$toStationName (${_dest!.toUpperCase()})';
+        };
+    }
     
     @override
     Widget build(BuildContext context) {
@@ -395,6 +427,7 @@ class FindTrainsCardState extends State<FindTrainsCard> {
                                 });
                             },
                             focusNode: _fromFocus,
+                            controller: _fromController,
                             entries: widget.stations.entries.map((station) {
                                 return DropdownMenuEntry(
                                     value: station.key,
@@ -411,6 +444,7 @@ class FindTrainsCardState extends State<FindTrainsCard> {
                                 });
                             },
                             focusNode: _toFocus,
+                            controller: _toController,
                             entries: widget.stations.entries.map((station) {
                                 return DropdownMenuEntry(
                                     value: station.key,
@@ -420,7 +454,8 @@ class FindTrainsCardState extends State<FindTrainsCard> {
                         ),
                         const SizedBox(height: 20),
                         FindTrainsCardSearchButton(
-                            onPressed: _onSearchButtonPressed(),
+                            onSearchPressed: _onSearchButtonPressed(),
+                            onSwapPressed: _onSwapButtonPressed(),
                         ),
                     ],
                 ),
@@ -448,6 +483,7 @@ class FindTrainsCardDropDownMenu extends StatelessWidget {
     final String hintText;
     final ValueChanged<String?> onChanged;
     final FocusNode focusNode;
+    final TextEditingController controller;
     final List<DropdownMenuEntry<String>> entries;
 
     const FindTrainsCardDropDownMenu({
@@ -456,6 +492,7 @@ class FindTrainsCardDropDownMenu extends StatelessWidget {
         required this.onChanged,
         required this.focusNode,
         required this.entries,
+        required this.controller,
     });
 
     @override
@@ -468,6 +505,7 @@ class FindTrainsCardDropDownMenu extends StatelessWidget {
             focusNode: focusNode,
             dropdownMenuEntries: entries,
             onSelected: onChanged,
+            controller: controller,
             menuHeight: 300,
             inputDecorationTheme: InputDecorationTheme(
                 filled: true,
@@ -489,43 +527,76 @@ class FindTrainsCardDropDownMenu extends StatelessWidget {
 }
 
 class FindTrainsCardSearchButton extends StatelessWidget {
-    final VoidCallback? onPressed;
+    final VoidCallback? onSearchPressed;
+    final VoidCallback? onSwapPressed;
 
-    const FindTrainsCardSearchButton({super.key, required this.onPressed});
+    const FindTrainsCardSearchButton({
+        super.key,
+        required this.onSearchPressed,
+        required this.onSwapPressed,
+    });
 
     @override
     Widget build(BuildContext context) {
-        return MaterialButton(
-            minWidth: .infinity,
-            height: 40,
-            color: Colors.blue,
-            disabledColor: Colors.grey,
-            shape: RoundedRectangleBorder(
-                borderRadius: .all(.circular(10)),
-            ),
-            onPressed: onPressed,
-            child: Row(
-                mainAxisSize: .max,
-                mainAxisAlignment: .center,
-                crossAxisAlignment: .center,
-                spacing: 10,
-                children: [
-                    Text(
-                        'Search',
-                        style: .new(
-                            fontSize: 18,
-                            fontWeight: .w900,
-                            color: Colors.white,
+        return Row(
+            spacing: 1,
+            children: [
+                Expanded(
+                    child: MaterialButton(
+                        height: 40,
+                        color: Colors.blue,
+                        disabledColor: Colors.grey,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: .only(
+                                topLeft: .circular(10),
+                                bottomLeft: .circular(10),
+                            ),
+                        ),
+                        onPressed: onSearchPressed,
+                        child: Row(
+                            mainAxisSize: .max,
+                            mainAxisAlignment: .center,
+                            crossAxisAlignment: .center,
+                            spacing: 10,
+                            children: [
+                                Text(
+                                    'Search',
+                                    style: .new(
+                                        fontSize: 18,
+                                        fontWeight: .w900,
+                                        color: Colors.white,
+                                    ),
+                                ),
+                                Icon(
+                                    Icons.search,
+                                    fontWeight: .w900,
+                                    color: Colors.white,
+                                    size: 20,
+                                ),
+                            ],
                         ),
                     ),
-                    Icon(
-                        Icons.search,
+                ),
+                MaterialButton(
+                    height: 40,
+                    minWidth: 20,
+                    color: Colors.blue,
+                    disabledColor: Colors.grey,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: .only(
+                            topRight: .circular(10),
+                            bottomRight: .circular(10),
+                        ),
+                    ),
+                    onPressed: onSwapPressed,
+                    child: Icon(
+                        Icons.swap_vert,
                         fontWeight: .w900,
                         color: Colors.white,
                         size: 20,
                     ),
-                ],
-            ),
+                ),
+            ],
         );
     }
 }
