@@ -28,6 +28,8 @@ help:
 	@echo "    |- railm                             Builds android and ios app."
 	@echo "           [RAILAPI_URL,"
 	@echo "           RAILAPI_TOKEN,"
+	@echo "           GITHUB_VERSION_URL,"
+	@echo "           GITHUB_RELEASE_URL,"
 	@echo "           MAPBOX_TOKEN]"
 	@echo
 	@echo "    clean                                Cleans build artifacts."
@@ -37,6 +39,8 @@ help:
 	@echo "    RAILAPI_URL                          Url for Railapi hosted server."
 	@echo "    RAILAPI_TOKEN                        Token for Railapi APIs."
 	@echo "    MAPBOX_TOKEN                         Token for Mapbox APIs."
+	@echo "    GITHUB_VERSION_URL                   Raw file link to the github 'version' file."
+	@echo "    GITHUB_RELEASE_URL                   Link for the github release page."
 	@echo "    RELEASE=<yes/no>                     Auto increments build number."
 
 ifeq ($(RELEASE), yes)

@@ -9,4 +9,6 @@ class Configs {
     static const token = String.fromEnvironment("RAILAPI_TOKEN");
     static const mapboxToken = String.fromEnvironment("MAPBOX_TOKEN");
     static const appVersion = String.fromEnvironment("RAILM_APP_VERSION");
+    static const githubVersionUrl = String.fromEnvironment("GITHUB_VERSION_URL");
+    static const githubReleaseUrl = String.fromEnvironment("GITHUB_RELEASE_URL");
 }

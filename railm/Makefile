@@ -12,6 +12,8 @@ VERSION ?= $(shell cat ../version)
 RAILAPI_URL ?=
 RAILAPI_TOKEN ?=
 MAPBOX_TOKEN ?=
+GITHUB_VERSION_URL ?=
+GITHUB_RELEASE_URL ?=
 
 TARGETS := \
 	$(BUILD)/railm-android-$(VERSION).apk
@@ -32,6 +34,14 @@ ifneq ($(filter build build-android build-ios run-debug run-release,$(MAKECMDGOA
   ifndef MAPBOX_TOKEN
     $(error MAPBOX_TOKEN not provided)
   endif
+
+  ifndef GITHUB_VERSION_URL
+    $(error GITHUB_VERSION_URL not provided)
+  endif
+
+  ifndef GITHUB_RELEASE_URL
+    $(error GITHUB_RELEASE_URL not provided)
+  endif
 endif
 
 .PHONY: build build-android build-ios run-debug run-release clean help version
@@ -45,6 +55,8 @@ help:
 	@echo "    |- build-ios                         Builds ios app."
 	@echo "           [RAILAPI_URL,"
 	@echo "           RAILAPI_TOKEN,"
+	@echo "           GITHUB_VERSION_URL,"
+	@echo "           GITHUB_RELEASE_URL,"
 	@echo "           MAPBOX_TOKEN]"
 	@echo
 	@echo "    run"
@@ -52,6 +64,8 @@ help:
 	@echo "    |- run-release                       Builds and runs app in release mode."
 	@echo "               [RAILAPI_URL,"
 	@echo "               RAILAPI_TOKEN,"
+	@echo "               GITHUB_VERSION_URL,"
+	@echo "               GITHUB_RELEASE_URL,"
 	@echo "               MAPBOX_TOKEN]"
 	@echo
 	@echo "    clean                                Cleans build artifacts."
@@ -61,6 +75,8 @@ help:
 	@echo "    RAILAPI_URL                          Url for Railapi hosted server."
 	@echo "    RAILAPI_TOKEN                        Token for Railapi APIs."
 	@echo "    MAPBOX_TOKEN                         Token for Mapbox APIs."
+	@echo "    GITHUB_VERSION_URL                   Raw file link to the github 'version' file."
+	@echo "    GITHUB_RELEASE_URL                   Link for the github release page."
 	@echo "    VERSION                              Build Version."
 
 build: $(TARGETS)
@@ -88,7 +104,9 @@ $(RAILM)/build/app/outputs/apk/release/app-release.apk:
     	--dart-define=RAILAPI_URL=$(RAILAPI_URL) \
         --dart-define=RAILAPI_TOKEN=$(RAILAPI_TOKEN) \
         --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN) \
-        --dart-define=RAILM_APP_VERSION=$(VERSION)
+        --dart-define=RAILM_APP_VERSION=$(VERSION) \
+        --dart-define=GITHUB_RELEASE_URL=$(GITHUB_RELEASE_URL) \
+        --dart-define=GITHUB_VERSION_URL=$(GITHUB_VERSION_URL)
 
 
 $(RAILM)/build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app:
@@ -96,21 +114,27 @@ $(RAILM)/build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app:
     	--dart-define=RAILAPI_URL=$(RAILAPI_URL) \
         --dart-define=RAILAPI_TOKEN=$(RAILAPI_TOKEN) \
         --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN) \
-        --dart-define=RAILM_APP_VERSION=$(VERSION)
+        --dart-define=RAILM_APP_VERSION=$(VERSION) \
+        --dart-define=GITHUB_RELEASE_URL=$(GITHUB_RELEASE_URL) \
+        --dart-define=GITHUB_VERSION_URL=$(GITHUB_VERSION_URL)
 
 run-debug:
 	$(FLUTTER) run \
     	--dart-define=RAILAPI_URL=$(RAILAPI_URL) \
         --dart-define=RAILAPI_TOKEN=$(RAILAPI_TOKEN) \
         --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN) \
-        --dart-define=RAILM_APP_VERSION=$(VERSION)-debug
+        --dart-define=RAILM_APP_VERSION=$(VERSION)-debug \
+        --dart-define=GITHUB_RELEASE_URL=$(GITHUB_RELEASE_URL) \
+        --dart-define=GITHUB_VERSION_URL=$(GITHUB_VERSION_URL)
 
 run-release:
 	$(FLUTTER) run --release \
     	--dart-define=RAILAPI_URL=$(RAILAPI_URL) \
         --dart-define=RAILAPI_TOKEN=$(RAILAPI_TOKEN) \
         --dart-define=MAPBOX_TOKEN=$(MAPBOX_TOKEN) \
-        --dart-define=RAILM_APP_VERSION=$(VERSION)
+        --dart-define=RAILM_APP_VERSION=$(VERSION) \
+        --dart-define=GITHUB_RELEASE_URL=$(GITHUB_RELEASE_URL) \
+        --dart-define=GITHUB_VERSION_URL=$(GITHUB_VERSION_URL)
 
 clean:
 	flutter clean

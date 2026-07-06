@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:railm/components/loading.dart';
 import 'package:railm/components/search_history_view.dart';
+import 'package:railm/configs/configs.dart';
 import 'package:railm/models/search_history.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/train.dart';
@@ -14,6 +15,8 @@ import 'package:railm/pages/settings.dart';
 import 'package:railm/pages/train_live_status.dart';
 import 'package:railm/pages/trains_between_stations.dart';
 import 'package:localstore/localstore.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class TrainHomePage extends StatefulWidget {
     final ValueChanged<ThemeMode> onThemeChanged;
@@ -38,6 +41,63 @@ class TrainHomePageState extends State<TrainHomePage> {
         super.initState();
         _loadStations();
         _loadHistories();
+        _checkForUpdate();
+    }
+
+    Future<void> _checkForUpdate() async {
+        final url = Configs.githubVersionUrl;
+        final resp = await http.get(Uri.parse(url));
+
+        final newVersion = resp.body.trim();
+        final appVersion = Configs.appVersion;
+        if (appVersion.endsWith("-debug")) {
+            return;
+        }
+
+        if (appVersion == newVersion) {
+            return;
+        }
+
+        final newCodeStr = newVersion.substring(1, 5);
+        final newBuildNoStr = newVersion.substring(6);
+        final newCode = int.parse(newCodeStr);
+        final newBuildNo = int.parse(newBuildNoStr);
+
+        final appCodeStr = appVersion.substring(1, 5);
+        final appBuildNoStr = appVersion.substring(6);
+        final appCode = int.parse(appCodeStr);
+        final appBuildNo = int.parse(appBuildNoStr);
+
+        if (newCode > appCode || newBuildNo > appBuildNo) {
+            if (!mounted) {
+                return;
+            }
+
+            showDialog(
+                context: context,
+                builder: (context) {
+                    return AlertDialog(
+                        title: Text('New update available'),
+                        content: Text(
+                            "Click 'Ok' to go to download page."
+                        ),
+                        actions: [
+                            TextButton(
+                                child: Text('Ok'),
+                                onPressed: () async {
+                                    final url = "${Configs.githubReleaseUrl}/$newVersion";
+                                    await launchUrl(Uri.parse(url));
+                                },
+                            ),
+                            TextButton(
+                                child: Text('Cancel'),
+                                onPressed: () => Navigator.pop(context),
+                            )
+                        ],
+                    );
+                }
+            );
+        }
     }
 
     Future<void> _loadStations() async {
