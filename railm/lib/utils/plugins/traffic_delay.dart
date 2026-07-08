@@ -3,14 +3,17 @@
 // Project: railm (railm) 
 // Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
 
+import 'package:localstore/localstore.dart';
 import 'package:railm/utils/plugin.dart';
 import 'package:railm/components/map.dart';
 import 'package:railm/utils/plugins/travel_delay.dart';
+import 'package:railm/utils/prediction.dart';
 
 class TrafficDelay extends Plugin {
     MapData? data;
     TravelDelay? travelDelay;
     num? travelTime;
+    bool isSaved = false;
 
     TrafficDelay({
         this.data,
@@ -19,6 +22,27 @@ class TrafficDelay extends Plugin {
         "Traffic Delay",
         "Get traffic delay data",
     );
+
+    Future<void> _saveTrafficDelay(double delay) async {
+        final db = Localstore.getInstance(useSupportDir: true);
+        final now = DateTime.now();
+        final date = "${now.day}-${now.month}-${now.year}";
+
+        final data = await db.collection("history")
+                            .doc("traffic-delay").get();
+
+        if (data == null ||  data['date'] != date) {
+            final pred = DelayPredictor();
+
+            await pred.addTrafficDelay(
+                Weekday.fromInt(now.weekday),
+                delay,
+            );
+            await db.collection("history")
+                    .doc("traffic-delay").set({'date': date});
+            isSaved = true;
+        }
+    }
 
     @override
     Future<num> fetch() async {
@@ -46,6 +70,10 @@ class TrafficDelay extends Plugin {
         final delay = (
             (route['duration'] / 60).floor() - travelDelay!.value!
         );
+
+        if (!isSaved) {
+            await _saveTrafficDelay(delay);
+        }
 
         return delay;
     }

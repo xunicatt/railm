@@ -188,7 +188,7 @@ class DelayPredictor {
         );
 
         if (delays.isEmpty) {
-            return 0;
+            return -1;
         }
 
         if (delays.length < 5) {
@@ -216,7 +216,7 @@ class DelayPredictor {
         );
 
         if (delays.isEmpty) {
-            return 0;
+            return -1;
         }
 
         if (delays.length < 5) {

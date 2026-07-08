@@ -218,9 +218,11 @@ class TrafficDelayCardState extends State<TrafficDelayCard> {
                                     ),
                                 ),
                                 Text(
+                                    _trafficDelay == -1 ?
+                                    'Not enough data available.' :
                                     '${_trafficDelay.round()} minutes',
                                     style: .new(
-                                        fontWeight: .w700,
+                                        fontWeight: _trafficDelay == -1 ? .w500 : .w700,
                                     ),
                                 ),
                             ],
@@ -409,9 +411,11 @@ class TrainDelayCardState extends State<TrainDelayCard> {
                                     ),
                                 ),
                                 Text(
+                                    _trainDelay == -1 ?
+                                    'Not enough data available.' :
                                     '${_trainDelay.round()} minutes',
                                     style: .new(
-                                        fontWeight: .w700,
+                                        fontWeight: _trainDelay == -1 ? .w400 : .w700,
                                     ),
                                 ),
                             ],
