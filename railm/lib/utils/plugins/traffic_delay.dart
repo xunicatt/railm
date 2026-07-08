@@ -67,12 +67,12 @@ class TrafficDelay extends Plugin {
         }
 
         final route = routes[selectedRoute];
-        final delay = (
+        final num delay = (
             (route['duration'] / 60).floor() - travelDelay!.value!
         );
 
         if (!isSaved) {
-            await _saveTrafficDelay(delay);
+            await _saveTrafficDelay(delay.toDouble());
         }
 
         return delay;
