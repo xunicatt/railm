@@ -244,6 +244,20 @@ class SettingCacheOptionsState extends State<SettingCacheOptions> {
                         _db.collection("history").delete();
                     },
                 ),
+                SettingCacheOptionsButton(
+                    text: 'Delete Prediction data',
+                    icon: Icon(
+                        Icons.bar_chart,
+                        color: Colors.teal[400],
+                    ),
+                    buttonIcon: Icon(
+                        Icons.delete,
+                        color: Colors.red[400],
+                    ),
+                    onPressed: () {
+                        _db.collection("prediction").delete();
+                    },
+                ),
             ],
         );
     }
