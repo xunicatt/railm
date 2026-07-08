@@ -26,7 +26,6 @@ class SearchHistoryView extends StatefulWidget {
 class SearchHistoryViewState extends State<SearchHistoryView> {
     final _db = Localstore.getInstance(useSupportDir: true);
 
-
     @override
     Widget build(BuildContext context) {
         if (widget.histories.isEmpty) {

@@ -94,7 +94,7 @@ class LinearRegression {
 
 class DelayPredictor {
     final int maxHistory;
-    final Localstore _db = Localstore.instance;
+    final Localstore _db = Localstore.getInstance(useSupportDir: true);
 
     DelayPredictor({
         this.maxHistory = 12,
