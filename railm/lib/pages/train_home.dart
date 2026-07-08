@@ -140,6 +140,10 @@ class TrainHomePageState extends State<TrainHomePage> {
         List<SearchHistory> data = [];
         if (collection != null) {
             for (final entry in collection.entries) {
+                if (entry.key.endsWith("-delay")) {
+                    continue;
+                }
+
                 data.add(
                     SearchHistory.fromMap(entry.value),
                 );

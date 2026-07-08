@@ -3,9 +3,11 @@
 // Project: railm (railm) 
 // Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
 
+import 'package:localstore/localstore.dart';
 import 'package:railm/models/status.dart';
 import 'package:railm/models/train.dart';
 import 'package:railm/utils/plugin.dart';
+import 'package:railm/utils/prediction.dart';
 
 enum TrainDelayType {
     arrived(-1),
@@ -22,6 +24,7 @@ class TrainDelay extends Plugin {
     final String? srcStationId;
     final List<TrainStop> trainStops;
     Status? Function()? getStatus;
+    bool isSaved = false;
 
     TrainDelay({
         required this.trainNumber,
@@ -38,6 +41,33 @@ class TrainDelay extends Plugin {
         final hrs = int.parse(hrsString);
         final mins = int.parse(minsString);
         return hrs * 60 + mins;
+    }
+
+    Future<void> _saveTrainDelay(int pos) async {
+        final db = Localstore.getInstance(useSupportDir: true);
+        final now = DateTime.now();
+        final date = "${now.day}-${now.month}-${now.year}";
+
+        final data = await db.collection("history")
+                            .doc("$trainNumber-delay").get();
+
+        if (data == null ||  data['date'] != date) {
+            final stop = trainStops[pos];
+            final arrival = _stringToMin(stop.arrival);
+            final timeNow = now.hour * 60 + now.minute;
+            final diff = timeNow - arrival;
+
+            final pred = DelayPredictor();
+
+            await pred.addTrainDelay(
+                trainNumber,
+                Weekday.fromInt(now.weekday),
+                diff.toDouble(),
+            );
+            await db.collection("history")
+                    .doc("$trainNumber-delay").set({'date': date});
+            isSaved = true;
+        }
     }
 
     @override
@@ -61,6 +91,10 @@ class TrainDelay extends Plugin {
         int srcStationPos = trainStops.indexWhere((s) => s.station == srcStationId);
 
         if (currStationPos == srcStationPos) {
+            if (!isSaved) {
+                await _saveTrainDelay(currStationPos);
+            }
+
             return TrainDelayType.arrived.value;
         }
 

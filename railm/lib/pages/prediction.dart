@@ -274,6 +274,10 @@ class TrainDelayListState extends State<TrainDelayList> {
 
         List<Widget> children = [];
         for (final entry in data.entries) {
+            if (entry.key.endsWith("-delay")) {
+                continue;
+            }
+
             final sh = SearchHistory.fromMap(entry.value);
             if (data2.containsKey(sh.train.number)) {
                 children.add(
