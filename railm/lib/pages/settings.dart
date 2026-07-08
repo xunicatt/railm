@@ -507,6 +507,7 @@ class SettingCheckForUpdatesState extends State<SettingCheckForUpdates> {
                             padding: .only(right: 80),
                             child: Text(
                                 'Automatically checks for app updates at launch.', 
+                                textAlign: .left,
                                 style: .new(
                                     fontSize: 12,
                                 ),
@@ -524,17 +525,16 @@ class AppVersion extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-        return Row(
-            mainAxisAlignment: .center,
-            children: [
-                Text(
-                    Configs.appVersion,
-                    style: .new(
-                        fontSize: 14,
-                        color: Colors.grey,
-                    ),
+        return Container(
+            padding: .only(top: 40, bottom: 10),
+            alignment: .bottomCenter,
+            child: Text(
+                Configs.appVersion,
+                style: .new(
+                    fontSize: 14,
+                    color: Colors.grey,
                 ),
-            ],
+            ),
         );
     }
 }

@@ -503,11 +503,19 @@ class TrafficDelayState extends State<TrafficDelay> {
                     final weekdays = Weekday.values.toList();
                     final day = weekdays[index - 1];
                     return SpecialTextField(
+                        start: index == 1,
+                        end: index == _weekdays.values.length,
                         onChanged: (x) => setState(() => _weekdays[day] = x!),
                         hintText: day.name[0].toUpperCase() + day.name.substring(1),
                     );
                 },
-                separatorBuilder: (_, _) => SizedBox(height: 10),
+                separatorBuilder: (_, index) {
+                    if (index == 0 || index == _weekdays.length) {
+                        return SizedBox.shrink();
+                    }
+
+                    return Divider(height: 1);
+                },
             ),
         );
     }
@@ -578,6 +586,8 @@ class TrainDelayState extends State<TrainDelay> {
                                         ),
                                     ),
                                     SpecialTextField(
+                                        start: true,
+                                        end: true,
                                         onChanged: (x) => setState(() => trainNumber = x!),
                                         hintText: 'Train Number',
                                     ),
@@ -605,11 +615,19 @@ class TrainDelayState extends State<TrainDelay> {
                     final weekdays = Weekday.values.toList();
                     final day = weekdays[index - 1];
                     return SpecialTextField(
+                        start: index == 1,
+                        end: index == _weekdays.length,
                         onChanged: (x) => setState(() => _weekdays[day] = x!),
                         hintText: day.name[0].toUpperCase() + day.name.substring(1),
                     );
                 },
-                separatorBuilder: (_, _) => SizedBox(height: 10),
+                separatorBuilder: (_, index) {
+                    if (index == 0 || index == _weekdays.length) {
+                        return SizedBox.shrink();
+                    }
+
+                    return Divider(height: 1);
+                },
             ),
         );
     }
@@ -618,9 +636,13 @@ class TrainDelayState extends State<TrainDelay> {
 class SpecialTextField extends StatelessWidget {
     final void Function(String?) onChanged;
     final String hintText;
+    final bool start;
+    final bool end;
 
     const SpecialTextField({
         super.key,
+        this.start = false,
+        this.end = false,
         required this.onChanged,
         required this.hintText,
     });
@@ -633,9 +655,14 @@ class SpecialTextField extends StatelessWidget {
                 filled: true,
                 isDense: true,
                 hintText: hintText,
-                border: const OutlineInputBorder(
+                border: OutlineInputBorder(
                     borderSide: .none,
-                    borderRadius: BorderRadius.all(.circular(10)),
+                    borderRadius: BorderRadius.only(
+                        topLeft: start ? .circular(10) : .zero,
+                        topRight: start ? .circular(10) : .zero,
+                        bottomLeft: end ? .circular(10) : .zero,
+                        bottomRight: end ? .circular(10) : .zero,
+                    ),
                 ),
             ),
         );
