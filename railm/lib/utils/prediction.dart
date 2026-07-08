@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0
+// Author: xunicatt
+// Project: railm (railm) 
+// Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
+
 import 'package:localstore/localstore.dart';
 
 enum Weekday {
@@ -7,7 +12,12 @@ enum Weekday {
     thursday,
     friday,
     saturday,
-    sunday,
+    sunday;
+
+    factory Weekday.fromInt(int value) {
+        value = (value - 1) % value;
+        return values[value];
+    }
 }
 
 extension AverageExtension on List<double> {
