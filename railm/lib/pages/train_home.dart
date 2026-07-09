@@ -11,6 +11,7 @@ import 'package:railm/models/search_history.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/train.dart';
 import 'package:railm/components/map.dart';
+import 'package:railm/pages/prediction.dart';
 import 'package:railm/pages/settings.dart';
 import 'package:railm/pages/train_live_status.dart';
 import 'package:railm/pages/trains_between_stations.dart';
@@ -139,6 +140,10 @@ class TrainHomePageState extends State<TrainHomePage> {
         List<SearchHistory> data = [];
         if (collection != null) {
             for (final entry in collection.entries) {
+                if (entry.key.endsWith("-delay")) {
+                    continue;
+                }
+
                 data.add(
                     SearchHistory.fromMap(entry.value),
                 );
@@ -186,22 +191,36 @@ class TrainHomePageState extends State<TrainHomePage> {
             mainAxisAlignment: .start,
             crossAxisAlignment: .end,
             children: [
-                Padding(
-                    padding: .only(right: 10),
-                    child: IconButton(
-                        icon: Icon(Icons.settings),
-                        onPressed: () async {
-                            await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => Settings(
-                                        onThemeChanged: widget.onThemeChanged,
+                Row(
+                    mainAxisAlignment: .spaceBetween,
+                    children: [
+                        IconButton(
+                            icon: Icon(Icons.bar_chart),
+                            onPressed: () async {
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => Prediction(),
                                     ),
-                                ),
-                            );
-                            await _loadHistories();
-                        },
-                    ),
+                                );
+                                await _loadHistories();
+                            },
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.settings),
+                            onPressed: () async {
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => Settings(
+                                            onThemeChanged: widget.onThemeChanged,
+                                        ),
+                                    ),
+                                );
+                                await _loadHistories();
+                            },
+                        ),
+                    ],
                 ),
                 Expanded(
                     child: Center(

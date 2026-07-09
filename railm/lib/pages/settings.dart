@@ -244,6 +244,20 @@ class SettingCacheOptionsState extends State<SettingCacheOptions> {
                         _db.collection("history").delete();
                     },
                 ),
+                SettingCacheOptionsButton(
+                    text: 'Delete Prediction data',
+                    icon: Icon(
+                        Icons.bar_chart,
+                        color: Colors.teal[400],
+                    ),
+                    buttonIcon: Icon(
+                        Icons.delete,
+                        color: Colors.red[400],
+                    ),
+                    onPressed: () {
+                        _db.collection("prediction").delete();
+                    },
+                ),
             ],
         );
     }
@@ -462,6 +476,7 @@ class SettingCheckForUpdatesState extends State<SettingCheckForUpdates> {
             child: Padding(
                 padding: .all(10),
                 child: Column(
+                    crossAxisAlignment: .start,
                     children: [
                         Row(
                             mainAxisAlignment: .spaceBetween,
@@ -510,17 +525,16 @@ class AppVersion extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-        return Row(
-            mainAxisAlignment: .center,
-            children: [
-                Text(
-                    Configs.appVersion,
-                    style: .new(
-                        fontSize: 14,
-                        color: Colors.grey,
-                    ),
+        return Container(
+            padding: .only(top: 40, bottom: 10),
+            alignment: .bottomCenter,
+            child: Text(
+                Configs.appVersion,
+                style: .new(
+                    fontSize: 14,
+                    color: Colors.grey,
                 ),
-            ],
+            ),
         );
     }
 }

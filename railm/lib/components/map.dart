@@ -225,9 +225,8 @@ class MapViewState extends State<MapView> {
                         ),
                         child: MapWidget(
                             key: ValueKey("map"),
-                            styleUri: brightess == .dark ?
-                                MapboxStyles.DARK:
-                                MapboxStyles.STANDARD,
+                            textureView: true,
+                            styleUri: MapboxStyles.STANDARD,
                             viewport: CameraViewportState(
                                 center: Point(
                                     coordinates: .new(_lng1!, _lat1!),
@@ -242,6 +241,17 @@ class MapViewState extends State<MapView> {
                                         pulsingEnabled: true,
                                     ),
                                 );
+
+                                if (mounted) {
+                                    await map.style.setStyleImportConfigProperty(
+                                        "basemap",
+                                        "lightPreset",
+                                        brightess == .dark ?
+                                        "night" :
+                                        "day",
+                                    );
+                                }
+
                                 map.addInteraction(
                                     TapInteraction.onMap((context) async {
                                             final cord = context.point.coordinates;
