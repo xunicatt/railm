@@ -16,6 +16,7 @@ RAILAPI := $(PWD)/railapi
 RAILM := $(PWD)/railm
 
 VERSION = $(shell cat version)
+EXTRA_VERSION :=
 
 .PHONY: all pre-build railapi railm help version
 
@@ -55,6 +56,10 @@ ifeq ($(RELEASE), yes)
   endif
 
   VERSION := v$(CCODE).$(BUILDVER)
+  ifneq ($(EXTRA_VERSION),)
+    VERSION := $(VERSION)-$(EXTRA_VERSION)
+  endif
+
   $(file >version,$(VERSION))
 endif
 
