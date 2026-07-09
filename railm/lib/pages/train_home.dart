@@ -56,14 +56,28 @@ class TrainHomePageState extends State<TrainHomePage> {
         final resp = await http.get(Uri.parse(url));
 
         final newVersion = resp.body.trim();
-        final appVersion = Configs.appVersion;
-        if (appVersion.endsWith("-debug")) {
+        var appVersion = Configs.appVersion;
+        if (appVersion.contains("-debug")) {
             return;
         }
 
         if (appVersion == newVersion) {
             return;
-        }
+       }
+
+       if (appVersion.contains("-rc")) {
+            final versions = appVersion.split("-rc");
+            if (versions.length != 2) {
+                return;
+            }
+
+            if (versions[0] == newVersion) {
+                _showUpdateAvailableDialog(newVersion);
+                return;
+            }
+
+            appVersion = versions[0];
+       }
 
         final newCodeStr = newVersion.substring(1, 5);
         final newBuildNoStr = newVersion.substring(6);
@@ -79,32 +93,36 @@ class TrainHomePageState extends State<TrainHomePage> {
             if (!mounted) {
                 return;
             }
-
-            showDialog(
-                context: context,
-                builder: (context) {
-                    return AlertDialog(
-                        title: Text('New update available'),
-                        content: Text(
-                            "Click 'Ok' to go to download page."
-                        ),
-                        actions: [
-                            TextButton(
-                                child: Text('Ok'),
-                                onPressed: () async {
-                                    final url = "${Configs.githubReleaseUrl}/$newVersion";
-                                    await launchUrl(Uri.parse(url));
-                                },
-                            ),
-                            TextButton(
-                                child: Text('Cancel'),
-                                onPressed: () => Navigator.pop(context),
-                            )
-                        ],
-                    );
-                }
-            );
+            
+            _showUpdateAvailableDialog(newVersion);
         }
+    }
+
+    void _showUpdateAvailableDialog(String newVersion) {
+        showDialog(
+            context: context,
+            builder: (context) {
+                return AlertDialog(
+                    title: Text('New update available'),
+                    content: Text(
+                        "Click 'Ok' to go to download page."
+                    ),
+                    actions: [
+                        TextButton(
+                            child: Text('Ok'),
+                            onPressed: () async {
+                                final url = "${Configs.githubReleaseUrl}/$newVersion";
+                                await launchUrl(Uri.parse(url));
+                            },
+                        ),
+                        TextButton(
+                            child: Text('Cancel'),
+                            onPressed: () => Navigator.pop(context),
+                        )
+                    ],
+                );
+            }
+        );
     }
 
     Future<void> _loadStations() async {
