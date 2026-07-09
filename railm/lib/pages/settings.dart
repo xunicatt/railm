@@ -476,6 +476,7 @@ class SettingCheckForUpdatesState extends State<SettingCheckForUpdates> {
             child: Padding(
                 padding: .all(10),
                 child: Column(
+                    crossAxisAlignment: .start,
                     children: [
                         Row(
                             mainAxisAlignment: .spaceBetween,
@@ -507,7 +508,6 @@ class SettingCheckForUpdatesState extends State<SettingCheckForUpdates> {
                             padding: .only(right: 80),
                             child: Text(
                                 'Automatically checks for app updates at launch.', 
-                                textAlign: .left,
                                 style: .new(
                                     fontSize: 12,
                                 ),
