@@ -95,7 +95,7 @@ $(BUILD)/railm-android-$(VERSION).apk: $(RAILM)/build/app/outputs/apk/release/ap
 $(BUILD)/railm-ios-$(VERSION).ipa: $(RAILM)/build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app
 	mkdir -p $(BUILD)
 	cp -r $< $(BUILD)/Payload
-	zip -r $(BUILD)/app.zip $(BUILD)/Payload
+	cd $(BUILD) && zip -r app.zip Payload
 	rm -r $(BUILD)/Payload
 	mv $(BUILD)/app.zip $@
 
