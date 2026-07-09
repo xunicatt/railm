@@ -11,8 +11,8 @@ smart railway tracking and database management mobile app.
 ```bash
 ## default-values:
 ### RAILAPI_URL="https://railm-railapi.vercel.app"
-### GITHUB_VERSION_URL "https://raw.githubusercontent.com/xunicatt/railm/refs/heads/prod/version"
-### GITHUB_RELEASE_URL "https://github.com/xunicatt/railm/releases"
+### GITHUB_VERSION_URL="https://raw.githubusercontent.com/xunicatt/railm/refs/heads/prod/version"
+### GITHUB_RELEASE_URL="https://github.com/xunicatt/railm/releases"
 
 # shows usage
 make help
