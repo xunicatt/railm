@@ -503,7 +503,22 @@ class TrafficDelayState extends State<TrafficDelay> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: .circular(10),
                                 ),
-                                child: Text('Save'),
+                                child: Row(
+                                    mainAxisAlignment: .center,
+                                    spacing: 10,
+                                    children: [
+                                        Text(
+                                            'Save',
+                                            style: .new(
+                                                fontSize: 18,
+                                                fontWeight: .w600,
+                                            ),
+                                        ),
+                                        Icon(
+                                            Icons.save,
+                                        ),
+                                    ],
+                                ),
                             ),
                         );
                     }
@@ -615,7 +630,22 @@ class TrainDelayState extends State<TrainDelay> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: .circular(10),
                                 ),
-                                child: Text('Save'),
+                                child: Row(
+                                    mainAxisAlignment: .center,
+                                    spacing: 10,
+                                    children: [
+                                        Text(
+                                            'Save',
+                                            style: .new(
+                                                fontSize: 18,
+                                                fontWeight: .w600,
+                                            ),
+                                        ),
+                                        Icon(
+                                            Icons.save,
+                                        ),
+                                    ],
+                                ),
                             ),
                         );
                     }
