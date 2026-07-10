@@ -388,7 +388,7 @@ class StatusViewCard extends StatelessWidget {
                                         heading,
                                         style: .new(
                                             fontWeight: .w600,
-                                            fontSize: 20,
+                                            fontSize: 16,
                                         ),
                                     ),
                                 ],
@@ -396,7 +396,7 @@ class StatusViewCard extends StatelessWidget {
                             Text(
                                 text,
                                 style: .new(
-                                    fontSize: 18,
+                                    fontSize: 14,
                                 ),
                             ),
                         ],
