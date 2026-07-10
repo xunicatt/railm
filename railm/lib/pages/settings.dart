@@ -198,8 +198,8 @@ class SettingCacheOptionsState extends State<SettingCacheOptions> {
                         Icons.delete,
                         color: Colors.red[400],
                     ),
-                    onPressed: () {
-                        _db.collection("trains").delete();
+                    onPressed: () async {
+                        await _db.collection("trains").delete();
                     },
                 ),
                 SettingCacheOptionsButton(
@@ -212,8 +212,8 @@ class SettingCacheOptionsState extends State<SettingCacheOptions> {
                         Icons.delete,
                         color: Colors.red[400],
                     ),
-                    onPressed: () {
-                        _db.collection("stations").delete();
+                    onPressed: () async {
+                        await _db.collection("stations").delete();
                     },
                 ),
                 SettingCacheOptionsButton(
@@ -226,8 +226,8 @@ class SettingCacheOptionsState extends State<SettingCacheOptions> {
                         Icons.delete,
                         color: Colors.red[400],
                     ),
-                    onPressed: () {
-                        _db.collection("station-locations").delete();
+                    onPressed: () async {
+                        await _db.collection("station-locations").delete();
                     },
                 ),
                 SettingCacheOptionsButton(
@@ -240,8 +240,8 @@ class SettingCacheOptionsState extends State<SettingCacheOptions> {
                         Icons.delete,
                         color: Colors.red[400],
                     ),
-                    onPressed: () {
-                        _db.collection("history").delete();
+                    onPressed: () async {
+                        await _db.collection("history").delete();
                     },
                 ),
                 SettingCacheOptionsButton(
@@ -254,8 +254,27 @@ class SettingCacheOptionsState extends State<SettingCacheOptions> {
                         Icons.delete,
                         color: Colors.red[400],
                     ),
-                    onPressed: () {
-                        _db.collection("prediction").delete();
+                    onPressed: () async {
+                        await _db.collection("prediction").delete();
+                        final histories = await _db.collection("history").get();
+                        if (histories == null) {
+                            return;
+                        }
+
+                        for (final history in histories.entries) {
+                            if (history.key.endsWith("-delay")) {
+                                // example: /history/<id>-delay
+                                // - after split: '', 'history', '<id>-delay'
+                                final names = history.key.split("/");
+                                if (names.length != 3) {
+                                    continue;
+                                }
+
+                                await _db.collection("history")
+                                        .doc(names[2])
+                                        .delete();
+                            }
+                        }
                     },
                 ),
             ],
@@ -410,17 +429,17 @@ class SettingAutoRefreshState extends State<SettingAutoRefresh> {
                                     activeThumbColor: Colors.blue,
                                     value: _autoRefresh,
 
-                                    onChanged: (x) {
+                                    onChanged: (x) async {
                                         setState(() {
                                             _autoRefresh = x; 
                                         });
 
-                                        _db.collection("settings")
-                                            .doc("auto-refresh")
-                                            .set({
-                                                'value': x,
-                                                'last-cached': DateTime.now().toIso8601String(),
-                                            });
+                                        await _db.collection("settings")
+                                                .doc("auto-refresh")
+                                                .set({
+                                                    'value': x,
+                                                    'last-cached': DateTime.now().toIso8601String(),
+                                                });
                                     },
                                 ),
                             ],
@@ -492,14 +511,14 @@ class SettingCheckForUpdatesState extends State<SettingCheckForUpdates> {
                                 Switch(
                                     activeThumbColor: Colors.blue,
                                     value: _checkForUpdate,
-                                    onChanged: (x) {
+                                    onChanged: (x) async {
                                         setState(() {
                                             _checkForUpdate = x; 
                                         });
 
-                                        _db.collection("settings")
-                                            .doc("check-for-updates")
-                                            .set({'value': x});
+                                        await _db.collection("settings")
+                                                .doc("check-for-updates")
+                                                .set({'value': x});
                                     },
                                 ),
                             ],
