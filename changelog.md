@@ -1,3 +1,25 @@
+## v2607.1-rc2
+> [!NOTE]
+> A release candidate (RC) is a pre-release version of software that is feature-complete, stable enough for production, and will become the final public release unless significant bugs are discovered. 
+
+#### Changes
+- added: changelog.md
+- railm: version bump 'mapbox_maps_flutter'
+- railm: added glyph icon to StatusViewCard, increased overall card size
+- railm: integrated TravelDelay into TrafficDelay
+- railm: improved UI and deprecated TravelDelay plugin
+- railm: reduced fontSize in StatusViewCard to avoid overflows
+- railm: changed public variables into private in plugins
+- railm: converted non-asyned functions into asynced
+- railm: separated TrafficDelay from TravelDelay
+- railm: removed a bug in TrafficDelay where it showed negative number as delay
+- railm: removed unused variable TravelDelay.travelTime
+- railm: removed TravelDelay plugin
+- railm: fixed package IPA with correct Payload root
+- railm: fixed a bug where deleting prediction data didn't delete the history
+  for stored delay timestamps
+- railm: fixed a bug in prediction page 'Save' button related to wrong color
+
 ## v2607.1-rc1
 > [!NOTE]
 > A release candidate (RC) is a pre-release version of software that is feature-complete, stable enough for production, and will become the final public release unless significant bugs are discovered. 
