@@ -19,6 +19,7 @@ class ExpectedDelay extends Plugin {
     ExpectedDelay({this.getSum}) : super(
         icon: Icon(
             Icons.hourglass_empty,
+            size: 32,
         ),
         name: "Expected Delay",
         description: "Shows total expected delay",

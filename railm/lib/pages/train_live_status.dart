@@ -376,28 +376,30 @@ class StatusViewCard extends StatelessWidget {
                     padding: .all(10),
                     height: 100,
                     child: Flex(
-                        direction: .vertical,
-                        mainAxisAlignment: .center,
-                        crossAxisAlignment: .start,
+                        direction: .horizontal,
+                        mainAxisAlignment: .start,
+                        crossAxisAlignment: .center,
                         spacing: 4,
                         children: [
-                            Row(
+                            icon,
+                            Column(
+                                mainAxisAlignment: .center,
+                                crossAxisAlignment: .start,
                                 children: [
-                                    icon,
                                     Text(
                                         heading,
                                         style: .new(
                                             fontWeight: .w600,
-                                            fontSize: 16,
+                                            fontSize: 14,
+                                        ),
+                                    ),
+                                    Text(
+                                        text,
+                                        style: .new(
+                                            fontSize: 12,
                                         ),
                                     ),
                                 ],
-                            ),
-                            Text(
-                                text,
-                                style: .new(
-                                    fontSize: 14,
-                                ),
                             ),
                         ],
                     ),

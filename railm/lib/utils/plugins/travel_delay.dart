@@ -3,9 +3,14 @@
 // Project: railm (railm) 
 // Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
 
+// This plugin is deprecated and will be removed in the upcoming
+// releases.
+
+import 'package:flutter/material.dart';
 import 'package:railm/components/map.dart';
 import 'package:railm/utils/plugin.dart';
 
+@Deprecated('Migrated traffic delay and travel delay in TrafficDelay plugin')
 class TravelDelay extends Plugin {
     MapData? data; 
     num? _value;
@@ -13,8 +18,9 @@ class TravelDelay extends Plugin {
     TravelDelay({
         this.data
     }) : super(
-        'Travel Delay',
-        'Get travel delay',
+        icon: Icon(Icons.abc),
+        name: 'Travel Delay',
+        description: 'Get travel delay',
     );
 
     @override
