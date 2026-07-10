@@ -512,10 +512,12 @@ class TrafficDelayState extends State<TrafficDelay> {
                                             style: .new(
                                                 fontSize: 18,
                                                 fontWeight: .w600,
+                                                color: Colors.white,
                                             ),
                                         ),
                                         Icon(
                                             Icons.save,
+                                            color: Colors.white,
                                         ),
                                     ],
                                 ),
@@ -639,10 +641,12 @@ class TrainDelayState extends State<TrainDelay> {
                                             style: .new(
                                                 fontSize: 18,
                                                 fontWeight: .w600,
+                                                color: Colors.white,
                                             ),
                                         ),
                                         Icon(
                                             Icons.save,
+                                            color: Colors.white,
                                         ),
                                     ],
                                 ),
