@@ -12,7 +12,6 @@ import 'package:railm/utils/prediction.dart';
 class TrafficDelay extends Plugin {
     MapData? data;
     TravelDelay? travelDelay;
-    num? travelTime;
     bool isSaved = false;
 
     TrafficDelay({
