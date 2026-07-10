@@ -60,10 +60,6 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
             getStatus: () => _status,
         );
 
-        final travelDelay = TravelDelay(
-            data: widget.mapData, 
-        );
-
         final trafficDelay = TrafficDelay(
             data: widget.mapData,
         );
@@ -74,7 +70,6 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
 
         _plugins = [
             trainDelay,
-            travelDelay,
             trafficDelay,
             expectedDelay,
         ];
