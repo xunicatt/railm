@@ -6,18 +6,13 @@
 import 'package:localstore/localstore.dart';
 import 'package:railm/utils/plugin.dart';
 import 'package:railm/components/map.dart';
-import 'package:railm/utils/plugins/travel_delay.dart';
 import 'package:railm/utils/prediction.dart';
 
 class TrafficDelay extends Plugin {
     MapData? data;
-    TravelDelay? travelDelay;
     bool isSaved = false;
 
-    TrafficDelay({
-        this.data,
-        this.travelDelay,
-    }): super(
+    TrafficDelay({this.data}): super(
         "Traffic Delay",
         "Get traffic delay data",
     );
@@ -45,14 +40,10 @@ class TrafficDelay extends Plugin {
 
     @override
     Future<num> fetch() async {
-        if (data == null || travelDelay == null) {
+        if (data == null) {
             return 0;
         }
 
-        if (travelDelay!.value == null) {
-            return 0;
-        }
-        
         final trafficData = await MapView.fetchRoute(
             'driving-traffic',
             data!.lng1, data!.lat1,
@@ -66,9 +57,7 @@ class TrafficDelay extends Plugin {
         }
 
         final route = routes[selectedRoute];
-        final num delay = (
-            (route['duration'] / 60).floor() - travelDelay!.value!
-        );
+        final num delay = (route['duration'] / 60).floor();
 
         if (!isSaved) {
             await _saveTrafficDelay(delay.toDouble());

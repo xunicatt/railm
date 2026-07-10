@@ -66,7 +66,6 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
 
         final trafficDelay = TrafficDelay(
             data: widget.mapData,
-            travelDelay: travelDelay,
         );
 
         final expectedDelay = ExpectedDelay(
