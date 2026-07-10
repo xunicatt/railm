@@ -8,7 +8,7 @@ import 'package:railm/utils/plugin.dart';
 
 class TravelDelay extends Plugin {
     MapData? data; 
-    num? value;
+    num? _value;
 
     TravelDelay({
         this.data
@@ -19,8 +19,8 @@ class TravelDelay extends Plugin {
 
     @override
     Future<num> fetch() async {
-        if (value != null) {
-            return value!;
+        if (_value != null) {
+            return _value!;
         }
 
         if (data == null) {
@@ -41,8 +41,8 @@ class TravelDelay extends Plugin {
         }
 
         final route = routes[selectedRoute];
-        value = (route['duration'] / 60).floor();
+        _value = (route['duration'] / 60).floor();
 
-        return value!;
+        return _value!;
     }
 }

@@ -24,7 +24,7 @@ class TrainDelay extends Plugin {
     final String? srcStationId;
     final List<TrainStop> trainStops;
     Status? Function()? getStatus;
-    bool isSaved = false;
+    bool _isSaved = false;
 
     TrainDelay({
         required this.trainNumber,
@@ -66,7 +66,7 @@ class TrainDelay extends Plugin {
             );
             await db.collection("history")
                     .doc("$trainNumber-delay").set({'date': date});
-            isSaved = true;
+            _isSaved = true;
         }
     }
 
@@ -91,7 +91,7 @@ class TrainDelay extends Plugin {
         int srcStationPos = trainStops.indexWhere((s) => s.station == srcStationId);
 
         if (currStationPos == srcStationPos) {
-            if (!isSaved) {
+            if (!_isSaved) {
                 await _saveTrainDelay(currStationPos);
             }
 

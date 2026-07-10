@@ -10,7 +10,7 @@ import 'package:railm/utils/prediction.dart';
 
 class TrafficDelay extends Plugin {
     MapData? data;
-    bool isSaved = false;
+    bool _isSaved = false;
 
     TrafficDelay({this.data}): super(
         "Traffic Delay",
@@ -34,7 +34,7 @@ class TrafficDelay extends Plugin {
             );
             await db.collection("history")
                     .doc("traffic-delay").set({'date': date});
-            isSaved = true;
+            _isSaved = true;
         }
     }
 
@@ -59,7 +59,7 @@ class TrafficDelay extends Plugin {
         final route = routes[selectedRoute];
         final num delay = (route['duration'] / 60).floor();
 
-        if (!isSaved) {
+        if (!_isSaved) {
             await _saveTrafficDelay(delay.toDouble());
         }
 
