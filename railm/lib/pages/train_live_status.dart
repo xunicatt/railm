@@ -15,7 +15,6 @@ import 'package:railm/utils/plugin.dart';
 import 'package:railm/utils/plugins/expected_delay.dart';
 import 'package:railm/utils/plugins/traffic_delay.dart';
 import 'package:railm/utils/plugins/train_delay.dart';
-import 'package:railm/utils/plugins/travel_delay.dart';
 
 class TrainLiveStatusPage extends StatefulWidget {
     final Train train;
@@ -148,6 +147,7 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                 StatusViewCard(
                     heading: _plugins[i].name,
                     text: text,
+                    icon: _plugins[i].icon,
                 ),
             );
         }
@@ -359,9 +359,11 @@ class StatusViewRow extends StatelessWidget {
 class StatusViewCard extends StatelessWidget {
     final String heading;
     final String text;
+    final Icon icon;
 
     const StatusViewCard({
         super.key,
+        required this.icon,
         required this.heading,
         required this.text,
     });
@@ -372,19 +374,31 @@ class StatusViewCard extends StatelessWidget {
             child: Card(
                 child: Container(
                     padding: .all(10),
+                    height: 100,
                     child: Flex(
                         direction: .vertical,
                         mainAxisAlignment: .center,
                         crossAxisAlignment: .start,
+                        spacing: 4,
                         children: [
+                            Row(
+                                children: [
+                                    icon,
+                                    Text(
+                                        heading,
+                                        style: .new(
+                                            fontWeight: .w600,
+                                            fontSize: 20,
+                                        ),
+                                    ),
+                                ],
+                            ),
                             Text(
-                                heading,
+                                text,
                                 style: .new(
-                                    fontWeight: .w600,
                                     fontSize: 18,
                                 ),
                             ),
-                            Text(text),
                         ],
                     ),
                 ),

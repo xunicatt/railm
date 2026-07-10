@@ -3,6 +3,7 @@
 // Project: railm (railm) 
 // Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
 
+import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:railm/utils/plugin.dart';
 import 'package:railm/components/map.dart';
@@ -13,8 +14,11 @@ class TrafficDelay extends Plugin {
     bool _isSaved = false;
 
     TrafficDelay({this.data}): super(
-        "Traffic Delay",
-        "Get traffic delay data",
+        icon: Icon(
+            Icons.traffic,
+        ),
+        name: "Traffic Delay",
+        description: "Get traffic delay data",
     );
 
     Future<void> _saveTrafficDelay(double delay) async {

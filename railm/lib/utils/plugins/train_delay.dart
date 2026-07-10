@@ -3,6 +3,7 @@
 // Project: railm (railm) 
 // Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
 
+import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:railm/models/status.dart';
 import 'package:railm/models/train.dart';
@@ -32,8 +33,11 @@ class TrainDelay extends Plugin {
         required this.trainStops,
         this.getStatus,
     }): super(
-        'Train Delay',
-        'Get train delay',
+        icon: Icon(
+            Icons.train,
+        ),
+        name: 'Train Delay',
+        description: 'Get train delay',
     );
 
     int _stringToMin(String time) {
