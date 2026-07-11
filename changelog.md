@@ -1,3 +1,43 @@
+## v2607.1
+
+#### Changes
+- added: changelog.md
+- added: asset project icon
+- added: EXTRA_VERSION support in Makefile for Release Candidates
+- updated: README.md
+- updated: .gitignore
+- railm: version bump 'mapbox_maps_flutter'
+- railm: added glyph icon to StatusViewCard, increased overall card size
+- railm: added showing version number in settings
+- railm: added swap button to swap stations
+- railm: added support for checking for app updates
+- railm: added new option in Settings to toggle checking for updates
+- railm: added new option in Settings to delete predicition data
+- railm: added traffic/train delay prediction system
+- railm: added new prediction page
+- railm: added saving train delays from live status
+- railm: added saving trafic data
+- railm: added support for handling 'rc' version for checking update
+- railm: updated Makefile
+- railm: updated and added new flutter app flags
+- railm: minor ui improvements and design changes
+- railm: integrated TravelDelay into TrafficDelay
+- railm: deprecated TravelDelay plugin
+- railm: reduced fontSize in StatusViewCard to avoid overflows
+- railm: changed public variables into private in plugins
+- railm: converted non-asyned functions into asynced
+- railm: separated TrafficDelay from TravelDelay
+- railm: removed a bug in TrafficDelay where it showed negative number as delay
+- railm: removed unused variable TravelDelay.travelTime
+- railm: removed TravelDelay plugin
+- railm: fixed package IPA with correct Payload root
+- railm: fixed a bug where deleting prediction data didn't delete the history
+  for stored delay timestamps
+- railm: fixed a bug in prediction page 'Save' button related to wrong color
+- railm: fixed a bug where map didn't show markings or legends in dark mode
+
+**Full Changelog**: https://github.com/xunicatt/railm/compare/v2607.0...v2607.1
+
 ## v2607.1-rc2
 > [!NOTE]
 > A release candidate (RC) is a pre-release version of software that is feature-complete, stable enough for production, and will become the final public release unless significant bugs are discovered. 
@@ -19,6 +59,8 @@
 - railm: fixed a bug where deleting prediction data didn't delete the history
   for stored delay timestamps
 - railm: fixed a bug in prediction page 'Save' button related to wrong color
+
+**Full Changelog**: https://github.com/xunicatt/railm/compare/v2607.1-rc1...v2607.1-rc2
 
 ## v2607.1-rc1
 > [!NOTE]
