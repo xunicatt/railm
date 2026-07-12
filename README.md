@@ -14,6 +14,12 @@ railm (Railway Mobile), pronounced ‘realm,’ is a cross-platform mobile app p
 - railapi: backend for Railm app written in Go
 - railm: Mobile App written in Flutter
 
+## Branches
+- main: development branch
+- prod: production release for deployment (only updated to point releases)
+- prod-patch: special branch to apply quick patches on top of prod
+- releases/vXXXX.XX: release snapshot branches (only last current and previous snapshots are kept, older release branches will be deleted)
+
 # Build
 ```bash
 ## default-values:
