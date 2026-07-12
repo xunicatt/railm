@@ -447,6 +447,17 @@ class TrafficDelayState extends State<TrafficDelay> {
             d: ""
     };
 
+    bool _isFieldsEmpty() {
+        bool empty = true;
+        for (final entry in _weekdays.entries) {
+            if (entry.value.isNotEmpty) {
+                empty = false;
+                break;
+            }
+        }
+        return empty;
+    }
+
     Future<void> _onSavePressed() async {
         final pred = DelayPredictor();
 
@@ -496,7 +507,7 @@ class TrafficDelayState extends State<TrafficDelay> {
                         return Padding(
                             padding: .only(top: 20),
                             child: MaterialButton(
-                                onPressed: _onSavePressed,
+                                onPressed: _isFieldsEmpty() ? null : _onSavePressed,
                                 height: 40,
                                 color: Colors.blue,
                                 disabledColor: Colors.grey,
@@ -565,6 +576,21 @@ class TrainDelayState extends State<TrainDelay> {
             d: ""
     };
 
+    bool _isFieldsEmpty() {
+        if (trainNumber.isEmpty) {
+            return true;
+        }
+
+        bool empty = true;
+        for (final entry in _weekdays.entries) {
+            if (entry.value.isNotEmpty) {
+                empty = false;
+                break;
+            }
+        }
+        return empty;
+    }
+
     Future<void> _onSavePressed() async {
         final pred = DelayPredictor();
 
@@ -625,7 +651,7 @@ class TrainDelayState extends State<TrainDelay> {
                         return Padding(
                             padding: .only(top: 20),
                             child: MaterialButton(
-                                onPressed: trainNumber.isEmpty ? null : _onSavePressed,
+                                onPressed: _isFieldsEmpty() ? null : _onSavePressed,
                                 height: 40,
                                 color: Colors.blue,
                                 disabledColor: Colors.grey,
