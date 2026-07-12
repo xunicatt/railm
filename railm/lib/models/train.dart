@@ -104,7 +104,7 @@ class Train {
     }
 
     static Future<Train?> fetchTrain(String number) async {
-        final String url = "${Configs.baseUrl}/trains/$number?auth=${Configs.token}";
+        final String url = "${Configs.railApiBaseUrl}/trains/$number?auth=${Configs.railApiToken}";
         final response = await http.get(Uri.parse(url));
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         if (json.containsKey("status") && json["status"] == "failed") {
@@ -118,7 +118,7 @@ class Train {
         String src,
         String dest,
     ) async {
-        final String url = "${Configs.baseUrl}/trains/between/$src/$dest?auth=${Configs.token}";
+        final String url = "${Configs.railApiBaseUrl}/trains/between/$src/$dest?auth=${Configs.railApiToken}";
         final response = await http.get(Uri.parse(url));
         return List<String>.from(jsonDecode(response.body));
     }
@@ -127,13 +127,13 @@ class Train {
         String src,
         String dest,
     ) async {
-        final String url = "${Configs.baseUrl}/trains";
+        final String url = "${Configs.railApiBaseUrl}/trains";
         final numbers = await fetchTrainNumbersBetweenStations(
             src, dest,
         );
 
         final futures = numbers.map((number) async {
-            final resp = await http.get(Uri.parse("$url/$number?auth=${Configs.token}"));
+            final resp = await http.get(Uri.parse("$url/$number?auth=${Configs.railApiToken}"));
             final data = jsonDecode(resp.body);
             return Train.fromJson(data);
         });
