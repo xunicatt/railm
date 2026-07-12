@@ -1,3 +1,8 @@
+<!-- SPDX-License-Identifier: GPL-2.0 -->
+<!-- Author: xunicatt -->
+<!-- Project: railm -->
+<!-- Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com> -->
+
 ## v2607.1
 
 #### Changes
