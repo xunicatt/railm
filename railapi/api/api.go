@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"net/http"
 	"railapi/internals/token"
+	"strings"
 )
 
 type Context struct {
@@ -28,9 +29,23 @@ func (c *Context) Deinit() {
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request) {
+		// TODO: will be removed in the future versions
+		// reason: Passing auth-token via query in the url is not the safest aproach.
+		// Browsers, network interfaces can cache/log the url revealing the token.
+		// NOTE: DEPRECATED
 		auth := r.URL.Query().Get("auth")
 
-		if !token.IsValid(auth) {
+		if auth == "" {
+			// NOTE: Format -> Token <token>
+			token := r.Header.Get("Authorization")
+			keywordAndToken := strings.Split(token, " ")
+
+			if len(keywordAndToken) == 2 && keywordAndToken[0] == "Token" {
+				auth = keywordAndToken[1]
+			}
+		}
+
+		if auth == "" || !token.IsValid(auth) {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
