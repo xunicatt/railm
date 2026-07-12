@@ -27,8 +27,12 @@ class Status {
     }
 
     static Future<Status?> fetchStatus(String number) async {
-        final String url = "${Configs.railApiBaseUrl}/status/$number?auth=${Configs.railApiToken}";
-        var response = await http.get(Uri.parse(url));
+        final String url = "${Configs.railApiBaseUrl}/status/$number";
+        var response = await http.get(
+            Uri.parse(url), headers: {
+                'Authorization': 'Token ${Configs.railApiToken}',
+            },
+        );
         var data = jsonDecode(response.body) as Map<String, dynamic>;
 
         if ((data.containsKey("status") && data["status"] == "failed") ||
@@ -40,8 +44,12 @@ class Status {
     }
 
     static Future<bool> updateStatus(String trainNumber, String stationId, String time) async {
-        final String url = "${Configs.railApiBaseUrl}/status/$trainNumber/$stationId?auth=${Configs.railApiToken}&time=$time";
-        var response = await http.post(Uri.parse(url));
+        final String url = "${Configs.railApiBaseUrl}/status/$trainNumber/$stationId?time=$time";
+        var response = await http.post(
+            Uri.parse(url), headers: {
+                'Authorization': 'Token ${Configs.railApiToken}',
+            },
+        );
         var data = jsonDecode(response.body) as Map<String, dynamic>;
 
         return data.containsKey("status") && data["status"] == "success";

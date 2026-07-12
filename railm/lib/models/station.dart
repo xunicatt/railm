@@ -49,8 +49,12 @@ class Station {
     }
 
     static Future<List<String>> fetchIds() async {
-        final String url = "${Configs.railApiBaseUrl}/stations?auth=${Configs.railApiToken}";
-        var response = await http.get(Uri.parse(url));
+        final String url = "${Configs.railApiBaseUrl}/stations";
+        var response = await http.get(
+            Uri.parse(url), headers: {
+                'Authorization': 'Token ${Configs.railApiToken}',
+            },
+        );
         return List<String>.from(jsonDecode(response.body));
     }
 
@@ -59,7 +63,11 @@ class Station {
         final ids = await fetchIds();
 
         final futures = ids.map((id) async {
-            final resp = await http.get(Uri.parse("$url/$id?auth=${Configs.railApiToken}"));
+            final resp = await http.get(
+                Uri.parse("$url/$id"), headers: {
+                    'Authorization': 'Token ${Configs.railApiToken}',
+                },
+            );
             final data = jsonDecode(resp.body);
             return Station.fromJson(data);
         });
