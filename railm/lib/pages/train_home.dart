@@ -209,36 +209,39 @@ class TrainHomePageState extends State<TrainHomePage> {
             mainAxisAlignment: .start,
             crossAxisAlignment: .end,
             children: [
-                Row(
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                        IconButton(
-                            icon: Icon(Icons.bar_chart),
-                            onPressed: () async {
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => Prediction(),
-                                    ),
-                                );
-                                await _loadHistories();
-                            },
-                        ),
-                        IconButton(
-                            icon: Icon(Icons.settings),
-                            onPressed: () async {
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => Settings(
-                                            onThemeChanged: widget.onThemeChanged,
+                Padding(
+                    padding: .symmetric(horizontal: 10),
+                    child: Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                            IconButton(
+                                icon: Icon(Icons.bar_chart),
+                                onPressed: () async {
+                                    await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => Prediction(),
                                         ),
-                                    ),
-                                );
-                                await _loadHistories();
-                            },
-                        ),
-                    ],
+                                    );
+                                    await _loadHistories();
+                                },
+                            ),
+                            IconButton(
+                                icon: Icon(Icons.settings),
+                                onPressed: () async {
+                                    await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => Settings(
+                                                onThemeChanged: widget.onThemeChanged,
+                                            ),
+                                        ),
+                                    );
+                                    await _loadHistories();
+                                },
+                            ),
+                        ],
+                    ),
                 ),
                 Expanded(
                     child: Center(
