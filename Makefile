@@ -30,10 +30,10 @@ help:
 	@echo "    |- railapi                           Builds server binaries."
 	@echo "    |- railm                             Builds android and ios app."
 	@echo "           [RAILAPI_URL,"
-	@echo "           RAILAPI_TOKEN,"
+	@echo "           RAILAPI_TOKEN(*),"
 	@echo "           GITHUB_VERSION_URL,"
 	@echo "           GITHUB_RELEASE_URL,"
-	@echo "           MAPBOX_TOKEN]"
+	@echo "           MAPBOX_TOKEN(*)]"
 	@echo
 	@echo "    clean                                Cleans build artifacts."
 	@echo "    version                              Prints current project version."
@@ -45,6 +45,8 @@ help:
 	@echo "    GITHUB_VERSION_URL                   Raw file link to the github 'version' file."
 	@echo "    GITHUB_RELEASE_URL                   Link for the github release page."
 	@echo "    RELEASE=<yes/no>                     Auto increments build number."
+	@echo
+	@echo "  INFO: Environment Variables marked with (*) are mandatory."
 
 ifeq ($(RELEASE), yes)
   VCODE := $(shell echo $(VERSION) | cut -c2-5)
