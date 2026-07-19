@@ -15,8 +15,8 @@ TURSO_DATABASE_TOKEN ?=
 
 TARGETS := \
 	$(BUILD)/railapi-linux-amd64-$(VERSION) \
-	$(BUILD)/railapi-linux-arm64-$(VERSION) \
-	$(BUILD)/railapi-darwin-arm64-$(VERSION)
+	$(BUILD)/railapi-linux-aarch64-$(VERSION) \
+	$(BUILD)/railapi-darwin-aarch64-$(VERSION)
 
 ifneq ($(filter run,$(MAKECMDGOALS)),)
   ifndef TURSO_DATABASE_URL
@@ -65,10 +65,10 @@ $(BUILD)/server: $(RAILAPI)/cmd/server/main.go
 $(BUILD)/railapi-linux-amd64-$(VERSION): $(RAILAPI)/cmd/server/main.go
 	GOOS=linux GOARCH=amd64 $(GO) build -o $@ $<
 
-$(BUILD)/railapi-linux-arm64-$(VERSION): $(RAILAPI)/cmd/server/main.go
+$(BUILD)/railapi-linux-aarch64-$(VERSION): $(RAILAPI)/cmd/server/main.go
 	GOOS=linux GOARCH=arm64 $(GO) build -o $@ $<
 
-$(BUILD)/railapi-darwin-arm64-$(VERSION): $(RAILAPI)/cmd/server/main.go
+$(BUILD)/railapi-darwin-aarch64-$(VERSION): $(RAILAPI)/cmd/server/main.go
 	GOOS=darwin GOARCH=arm64 $(GO) build -o $@ $<
 
 clean:
