@@ -3,7 +3,9 @@
 # Project: railm
 # Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com>
 
-RAILAPI_URL ?=
+RAILAPI_URL ?= "https://railm-railapi.vercel.app"
+GITHUB_VERSION_URL ?= "https://raw.githubusercontent.com/xunicatt/railm/refs/heads/prod/version"
+GITHUB_RELEASE_URL ?= "https://github.com/xunicatt/railm/releases"
 RAILAPI_TOKEN ?=
 MAPBOX_TOKEN ?=
 
@@ -85,6 +87,8 @@ railm:
 		RAILAPI_URL=$(RAILAPI_URL) \
 		RAILAPI_TOKEN=$(RAILAPI_TOKEN) \
 		MAPBOX_TOKEN=$(MAPBOX_TOKEN) \
+		GITHUB_VERSION_URL=$(GITHUB_VERSION_URL) \
+		GITHUB_RELEASE_URL=$(GITHUB_RELEASE_URL) \
 		build \
 		-j1
 
