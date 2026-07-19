@@ -22,20 +22,11 @@ railm (Railway Mobile), pronounced ‘realm,’ is a cross-platform mobile app p
 
 # Build
 ```bash
-## default-values:
-### RAILAPI_URL="https://railm-railapi.vercel.app"
-### GITHUB_VERSION_URL="https://raw.githubusercontent.com/xunicatt/railm/refs/heads/prod/version"
-### GITHUB_RELEASE_URL="https://github.com/xunicatt/railm/releases"
-
 # shows usage
 make help
 
 # builds whole project
-make build RAILAPI_TOKEN=<token> \
-           RAILAPI_URL=<url> \
-           MAPBOX_TOKEN=<token> \
-           GITHUB_VERSION_URL=<url> \
-           GITHUB_RELEASE_URL=<url>
+make build RAILAPI_TOKEN=<token> MAPBOX_TOKEN=<token>
 ```
 
 # Binaries
