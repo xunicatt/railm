@@ -37,7 +37,7 @@ Only required for initial turbodb setup.
 # run the server first
 # then insert datas
 # - <url> is server url
-# - <token> is server auth url
+# - <token> is server auth token
 ./data/insert.py <url> <token> data/<file>.json
 ```
 
