@@ -67,9 +67,7 @@ ifeq ($(RELEASE), yes)
   $(file >version,$(VERSION))
 endif
 
-TARGETS += railapi railm
-
-build: $(TARGETS)
+build: railapi railm
 
 version:
 	@echo $(VERSION)
