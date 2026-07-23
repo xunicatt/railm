@@ -18,7 +18,7 @@ RAILAPI := $(PWD)/railapi
 RAILM := $(PWD)/railm
 
 VERSION = $(shell cat version)
-EXTRA_VERSION :=
+EXTRA_VERSION := dev
 
 .PHONY: all pre-build railapi railm help version
 
