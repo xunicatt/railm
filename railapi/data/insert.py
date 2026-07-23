@@ -51,7 +51,7 @@ Payload = Route | Station | Train
 def insert(url: str, token: str, key: str, data: Payload) -> bool:
     resp = requests.post(
         f"{url}/{key}",
-        headers={"Autorization": f"Token {token}"},
+        headers={"Authorization": f"Token {token}"},
         json=json.dumps(data),
     )
 
