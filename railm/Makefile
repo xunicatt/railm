@@ -16,10 +16,10 @@ GITHUB_VERSION_URL ?=
 GITHUB_RELEASE_URL ?=
 
 TARGETS := \
-	$(BUILD)/railm-android-$(VERSION).apk
+	$(BUILD)/railm-android-unsigned-$(VERSION).apk
 
 ifeq ($(shell uname),Darwin)
-  TARGETS += $(BUILD)/railm-ios-$(VERSION).ipa
+  TARGETS += $(BUILD)/railm-ios-unsigned-$(VERSION).ipa
 endif
 
 ifneq ($(filter build build-android build-ios run-debug run-release,$(MAKECMDGOALS)),)
@@ -50,9 +50,9 @@ help:
 	@echo "Usage: make [options] [envs]"
 	@echo "  Options:"
 	@echo "    help                                 Prints help."
-	@echo "    build                                Builds android and ios app."
-	@echo "    |- build-android                     Builds android app."
-	@echo "    |- build-ios                         Builds ios app."
+	@echo "    build                                Builds unsigned android and ios app."
+	@echo "    |- build-android                     Builds unsigned android app."
+	@echo "    |- build-ios                         Builds unsigned ios app."
 	@echo "           [RAILAPI_URL,"
 	@echo "           RAILAPI_TOKEN,"
 	@echo "           GITHUB_VERSION_URL,"
@@ -84,15 +84,15 @@ build: $(TARGETS)
 version:
 	@echo $(VERSION)
 
-build-android: $(BUILD)/railm-android-$(VERSION).apk
+build-android: $(BUILD)/railm-android-unsigned-$(VERSION).apk
 
-build-ios: $(BUILD)/railm-ios-$(VERSION).ipa
+build-ios: $(BUILD)/railm-ios-unsigned-$(VERSION).ipa
 
-$(BUILD)/railm-android-$(VERSION).apk: $(RAILM)/build/app/outputs/apk/release/app-release.apk
+$(BUILD)/railm-android-unsigned-$(VERSION).apk: $(RAILM)/build/app/outputs/apk/release/app-release.apk
 	mkdir -p $(BUILD)
 	mv $< $@
 
-$(BUILD)/railm-ios-$(VERSION).ipa: $(RAILM)/build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app
+$(BUILD)/railm-ios-unsigned-$(VERSION).ipa: $(RAILM)/build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app
 	mkdir -p $(BUILD)
 	cp -r $< $(BUILD)/Payload
 	cd $(BUILD) && zip -r app.zip Payload
