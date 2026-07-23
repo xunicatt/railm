@@ -1,12 +1,12 @@
 # Docs for endpoints
 
 -------------------
-|  Version: 0.3   |
+|  Version: 0.4   |
 -------------------
 
 Note:
-** All endpoints requires an auth token. **
-Examples - <url>/trains?auth=<token>, <url>/stations/<id>?auth=<token>
+** All endpoints requires an auth token passed using header. **
+Example - header = {..., 'Authorization': 'Token <token>'}
 
 Definitions:
 - fail-succes:
