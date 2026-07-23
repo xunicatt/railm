@@ -57,7 +57,7 @@ class TrainHomePageState extends State<TrainHomePage> {
 
         final newVersion = resp.body.trim();
         var appVersion = Configs.appVersion;
-        if (appVersion.contains("-debug")) {
+        if (appVersion.contains("-debug") || appVersion.contains("-dev")) {
             return;
         }
 
