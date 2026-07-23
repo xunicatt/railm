@@ -20,7 +20,6 @@
 import json
 import sys
 import requests
-import os
 from typing import TypedDict, Any
 
 class Route(TypedDict):
@@ -51,8 +50,9 @@ Payload = Route | Station | Train
 
 def insert(url: str, token: str, key: str, data: Payload) -> bool:
     resp = requests.post(
-        f"{url}/{key}?auth={token}",
-        json=data
+        f"{url}/{key}",
+        headers={"Autorization": f"Token {token}"},
+        json=json.dumps(data),
     )
 
     if resp.status_code != 200:
