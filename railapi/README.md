@@ -21,14 +21,14 @@ make help
 make build-minimal 
 
 # run
-make run PORT=<port> \
-         TURSO_DATABASE_URL=<url> \
-         TURSO_DATABASE_TOKEN=<token>
+make run TURSO_DATABASE_URL=<url> TURSO_DATABASE_TOKEN=<token>
 ```
 
 ### Run from prebuild binaries
 ```bash
-TURSO_DATABASE_URL="<url>" TURSO_DATABASE_TOKEN="<token>" PORT="8080" ./railapi-<arch>-v26xx.x
+export TURSO_DATABASE_URL="<url>"
+export TURSO_DATABASE_TOKEN="<token>"
+./railapi-<arch>-v26xx.x
 ```
 
 ### Insert Test Data
@@ -36,7 +36,9 @@ Only required for initial turbodb setup.
 ```bash
 # run the server first
 # then insert datas
-./data/insert.py data/test-data.json
+# - <url> is server url
+# - <token> is server auth url
+./data/insert.py <url> <token> data/<file>.json
 ```
 
 # Info
