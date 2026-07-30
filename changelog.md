@@ -3,6 +3,33 @@
 <!-- Project: railm -->
 <!-- Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com> -->
 
+## v2607.2
+
+#### Changes
+
+> [!NOTE]
+> This update focuses on improving developer experience, stability and bug fixes
+> while introducing a more secure token passing interface.
+
+- added: LICENSE header to markdown files
+- added: branch description in README.md
+- added: default values to Makefile
+- updated: help message in Makefile to mark mandatory env variables
+- removed: TARGETS variable in Makeile
+- railapi: updated api-docs.txt
+- railapi: updated data/insert.py to use new api authentication
+- railapi: renamed arm64 -> aarch64 in Makefile for better clarity
+- railapi: deprecated passing auth-token using url
+- railm: added 'unsigned' to build name in Makefile
+- railm: added support for checking dev versions
+- railm: renamed variables in 'Configs' to be more descriptive
+- railm: updated railapi requests to use new authorization interface
+- railm: updated dependencies
+- railm: enable Save button in Predicition page only when any field is filled
+- railm: minor UI improvements
+
+**Full Changelog**: https://github.com/xunicatt/railm/compare/v2607.1...v2607.2
+
 ## v2607.1
 
 #### Changes
