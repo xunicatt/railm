@@ -116,12 +116,23 @@ class MapViewState extends State<MapView> {
 
     Future<void> _loadLocation() async {
         if (!await _gl.isLocationServiceEnabled()) {
+            _showWarningDialog(
+                "Location Disabled",
+                "Please enabled location to use this app.",
+            );
             return;
         }
 
         final permission = await _gl.checkPermission();
-        if (permission == .denied) {
-            await _gl.requestPermission();
+        if (permission == .denied || permission == .deniedForever) {
+            final permission = await _gl.requestPermission();
+            if (permission == .denied || permission == .deniedForever) {
+                _showWarningDialog(
+                    "Location Permission Disabled",
+                    "Please allow location permission to use this app.",
+                );
+                return;
+            }
         }
 
         final pos = await _gl.getCurrentPosition();
@@ -193,6 +204,34 @@ class MapViewState extends State<MapView> {
                 ..lineColor = Colors.blue.toARGB32()
                 ..lineOpacity = selected == i ? 1.0 : 0.4,
             );
+        }
+    }
+
+    Future<void> _showWarningDialog(String title, String message) async {
+        if (!mounted) {
+            return;
+        }
+        await showDialog(
+            barrierDismissible: true,
+            context: context,
+            builder: (context) {
+                return AlertDialog(
+                    title: Text(title),
+                    content: Text(message),
+                    actions: [
+                        TextButton(
+                            child: Text('Ok'),
+                            onPressed: () {
+                                Navigator.pop(context);
+                            },
+                        ),
+                    ],
+                );
+            },
+        );
+
+        if (mounted) {
+            Navigator.pop(context);
         }
     }
 
