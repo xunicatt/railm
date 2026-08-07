@@ -8,7 +8,7 @@
 smart railway tracking and database management mobile app.
 
 ## Dependencies
-- flutter v3.44.x
+- flutter v3.44.9
 - android emulator v36 (tested on)
 - ios simulator (tested on)
 
