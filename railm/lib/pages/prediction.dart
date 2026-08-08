@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
+import 'package:railm/configs/configs.dart';
 import 'package:railm/models/search_history.dart';
 import 'package:railm/utils/prediction.dart';
 
@@ -22,25 +23,31 @@ class PredictionState extends State<Prediction> {
     Widget build(BuildContext context) {
         return Scaffold(
             body: SafeArea(
-                child: CustomScrollView(
-                    slivers: [
-                        SliverPadding(
-                            padding: const EdgeInsets.all(10),
-                            sliver: SliverToBoxAdapter(
-                                child: Column(
-                                    spacing: 10,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                        PredictionHeading(
-                                            refresh: () => setState(() => _refresh = !_refresh),
+                child: Container(
+                    alignment: .topCenter,
+                    child: Container(
+                        constraints: .new(maxWidth: Configs.uiMaxWidth),
+                        child: CustomScrollView(
+                            slivers: [
+                                SliverPadding(
+                                    padding: const EdgeInsets.all(10),
+                                    sliver: SliverToBoxAdapter(
+                                        child: Column(
+                                            spacing: 10,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                                PredictionHeading(
+                                                    refresh: () => setState(() => _refresh = !_refresh),
+                                                ),
+                                                TrafficDelayCard(refresh: _refresh),
+                                                TrainDelayList(refresh: _refresh),
+                                            ],
                                         ),
-                                        TrafficDelayCard(refresh: _refresh),
-                                        TrainDelayList(refresh: _refresh),
-                                    ],
+                                    ),
                                 ),
-                            ),
+                            ],
                         ),
-                    ],
+                    ),
                 ),
             ),
         );

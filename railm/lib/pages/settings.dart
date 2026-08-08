@@ -16,32 +16,38 @@ class Settings extends StatelessWidget {
     Widget build(BuildContext context) {
         return Scaffold(
             body: SafeArea(
-                child: CustomScrollView(
-                    slivers: [
-                        SliverPadding(
-                            padding: const EdgeInsets.all(10),
-                            sliver: SliverToBoxAdapter(
-                                child: Column(
-                                    spacing: 10,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                        SettingsHeading(),
-                                        SettingThemeOptions(onThemeChanged: onThemeChanged),
-                                        SettingCacheOptions(),
-                                        SettingAutoRefresh(),
-                                        SettingCheckForUpdates(),
-                                    ],
+                child: Container(
+                    alignment: .topCenter,
+                    child: Container(
+                        constraints: .new(maxWidth: Configs.uiMaxWidth),
+                        child: CustomScrollView(
+                            slivers: [
+                                SliverPadding(
+                                    padding: const EdgeInsets.all(10),
+                                    sliver: SliverToBoxAdapter(
+                                        child: Column(
+                                            spacing: 10,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                                SettingsHeading(),
+                                                SettingThemeOptions(onThemeChanged: onThemeChanged),
+                                                SettingCacheOptions(),
+                                                SettingAutoRefresh(),
+                                                SettingCheckForUpdates(),
+                                            ],
+                                        ),
+                                    ),
                                 ),
-                            ),
+                                const SliverFillRemaining(
+                                    hasScrollBody: false,
+                                    child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: AppVersion(),
+                                    ),
+                                ),
+                            ],
                         ),
-                        const SliverFillRemaining(
-                            hasScrollBody: false,
-                            child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: AppVersion(),
-                            ),
-                        ),
-                    ],
+                    ),
                 ),
             ),
         );

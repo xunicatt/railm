@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:railm/components/loading.dart';
 import 'package:railm/components/map.dart';
+import 'package:railm/configs/configs.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/train.dart';
 import 'package:railm/pages/train_live_status.dart';
@@ -96,12 +97,15 @@ class TrainListPageState extends State<TrainListPage> {
                 child: Container(
                     alignment: .topCenter,
                     padding: .all(10),
-                    child: TrainList(
-                        trains: _trains,
-                        stations: widget.stations,
-                        srcStation: widget.srcStation,
-                        destStation: widget.destStation,
-                        mapData: widget.mapData,
+                    child: Container(
+                        constraints: .new(maxWidth: Configs.uiMaxWidth),
+                        child: TrainList(
+                            trains: _trains,
+                            stations: widget.stations,
+                            srcStation: widget.srcStation,
+                            destStation: widget.destStation,
+                            mapData: widget.mapData,
+                        ),
                     ),
                 ),
             ),

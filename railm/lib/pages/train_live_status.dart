@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 import 'package:railm/components/map.dart';
+import 'package:railm/configs/configs.dart';
 import 'package:railm/models/search_history.dart';
 import 'package:railm/models/station.dart';
 import 'package:railm/models/status.dart';
@@ -227,81 +228,84 @@ class TrainLiveStatusPageState extends State<TrainLiveStatusPage> {
                 child: Container(
                     alignment: .topCenter,
                     padding: .all(10),
-                    child: Column(
-                        mainAxisAlignment: .start,
-                        crossAxisAlignment: .start,
-                        children: [
-                            TrainLiveStatusHeading(
-                                trainNumber: widget.train.number,
-                                trainName: widget.train.name,
-                            ),
-                            SizedBox(height: 10),
-                            Expanded(
-                                child: TrainStopsList(
+                    child: Container(
+                        constraints: .new(maxWidth: Configs.uiMaxWidth),
+                        child: Column(
+                            mainAxisAlignment: .start,
+                            crossAxisAlignment: .start,
+                            children: [
+                                TrainLiveStatusHeading(
                                     trainNumber: widget.train.number,
-                                    stops: widget.train.stops,
-                                    stations: widget.stations,
-                                    isLiveMode: _liveMode,
-                                    status: _status,
-                                    onTap: _getOnTap,
+                                    trainName: widget.train.name,
                                 ),
-                            ),
-                            widget.mapData == null ?
-                            SizedBox.shrink() :
-                            SizedBox(height: 10),
-                            widget.mapData == null ?
-                            SizedBox.shrink() : 
-                            Row(
-                                mainAxisAlignment: .spaceBetween,
-                                children: [
-                                    Row(
-                                        children: [
-                                            IconButton.filled(
-                                                icon: Icon(
-                                                    Icons.insights,
-                                                ),
-                                                style: .new(
-                                                    backgroundColor: _cards.isEmpty ? 
-                                                        .all<Color>(Colors.grey) :
-                                                        .all<Color>(Colors.blue),
-                                                ),
-                                                onPressed: _cards.isEmpty ? null : () {
-                                                    showModalBottomSheet(
-                                                        context: context,
-                                                        useSafeArea: true,
-                                                        builder: (_) => _getStatusView(),
-                                                    );
-                                                },
-                                            ),
-                                            Text(
-                                                'Status',
-                                                style: .new(
-                                                    color: Colors.grey,
-                                                ),
-                                            ),
-                                        ],
+                                SizedBox(height: 10),
+                                Expanded(
+                                    child: TrainStopsList(
+                                        trainNumber: widget.train.number,
+                                        stops: widget.train.stops,
+                                        stations: widget.stations,
+                                        isLiveMode: _liveMode,
+                                        status: _status,
+                                        onTap: _getOnTap,
                                     ),
-                                    Row(
-                                        children: [
-                                            Padding(
-                                                padding: .only(left: 10),
-                                                child: Text(
-                                                    'Live Mode',
+                                ),
+                                widget.mapData == null ?
+                                SizedBox.shrink() :
+                                SizedBox(height: 10),
+                                widget.mapData == null ?
+                                SizedBox.shrink() : 
+                                Row(
+                                    mainAxisAlignment: .spaceBetween,
+                                    children: [
+                                        Row(
+                                            children: [
+                                                IconButton.filled(
+                                                    icon: Icon(
+                                                        Icons.insights,
+                                                    ),
+                                                    style: .new(
+                                                        backgroundColor: _cards.isEmpty ? 
+                                                            .all<Color>(Colors.grey) :
+                                                            .all<Color>(Colors.blue),
+                                                    ),
+                                                    onPressed: _cards.isEmpty ? null : () {
+                                                        showModalBottomSheet(
+                                                            context: context,
+                                                            useSafeArea: true,
+                                                            builder: (_) => _getStatusView(),
+                                                        );
+                                                    },
+                                                ),
+                                                Text(
+                                                    'Status',
                                                     style: .new(
                                                         color: Colors.grey,
                                                     ),
                                                 ),
-                                            ),
-                                            Switch(
-                                                activeThumbColor: Colors.blue,
-                                                value: _liveMode,
-                                                onChanged: (x) => setState(() { _liveMode = x; }),
-                                            ),
-                                        ],
-                                    ),
-                                ],
-                            ),
-                        ], 
+                                            ],
+                                        ),
+                                        Row(
+                                            children: [
+                                                Padding(
+                                                    padding: .only(left: 10),
+                                                    child: Text(
+                                                        'Live Mode',
+                                                        style: .new(
+                                                            color: Colors.grey,
+                                                        ),
+                                                    ),
+                                                ),
+                                                Switch(
+                                                    activeThumbColor: Colors.blue,
+                                                    value: _liveMode,
+                                                    onChanged: (x) => setState(() { _liveMode = x; }),
+                                                ),
+                                            ],
+                                        ),
+                                    ],
+                                ),
+                            ], 
+                        ),
                     ),
                 ),
             ),

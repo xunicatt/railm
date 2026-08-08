@@ -207,7 +207,7 @@ class TrainHomePageState extends State<TrainHomePage> {
 
         return Column(
             mainAxisAlignment: .start,
-            crossAxisAlignment: .end,
+            crossAxisAlignment: .center,
             children: [
                 Padding(
                     padding: .symmetric(horizontal: 10),
@@ -244,7 +244,9 @@ class TrainHomePageState extends State<TrainHomePage> {
                     ),
                 ),
                 Expanded(
-                    child: Center(
+                    child: Container(
+                        alignment: .center,
+                        constraints: .new(maxWidth: Configs.uiMaxWidth),
                         child: Padding(
                             padding: .only(
                                 top: 0,

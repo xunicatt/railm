@@ -96,9 +96,11 @@ class AppState extends State<App> {
             themeMode: _themeMode,
             debugShowCheckedModeBanner: false,
             home: Scaffold(
-                body: SafeArea(child: TrainHomePage(
-                    onThemeChanged: _onThemeChanged,
-                )),
+                body: SafeArea(
+                    child: TrainHomePage(
+                        onThemeChanged: _onThemeChanged,
+                    ),
+                ),
             ),
         );
     }

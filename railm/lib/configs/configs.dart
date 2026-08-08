@@ -10,4 +10,5 @@ class Configs {
     static const appVersion = String.fromEnvironment("RAILM_APP_VERSION");
     static const githubVersionUrl = String.fromEnvironment("GITHUB_VERSION_URL");
     static const githubReleaseUrl = String.fromEnvironment("GITHUB_RELEASE_URL");
+    static const double uiMaxWidth = 400;
 }
