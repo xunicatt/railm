@@ -413,6 +413,7 @@ class SettingAutoRefreshState extends State<SettingAutoRefresh> {
             child: Padding(
                 padding: .all(10),
                 child: Column(
+                    crossAxisAlignment: .start,
                     children: [
                         Row(
                             mainAxisAlignment: .spaceBetween,
