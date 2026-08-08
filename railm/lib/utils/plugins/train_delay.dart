@@ -35,6 +35,7 @@ class TrainDelay extends Plugin {
     }): super(
         icon: Icon(
             Icons.train,
+            color: Colors.green,
             size: 32,
         ),
         name: 'Train Delay',

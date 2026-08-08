@@ -16,6 +16,7 @@ class TrafficDelay extends Plugin {
     TrafficDelay({this.data}): super(
         icon: Icon(
             Icons.traffic,
+            color: Colors.indigo,
             size: 32,
         ),
         name: "Traffic Delay",
