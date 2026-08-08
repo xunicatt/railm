@@ -26,14 +26,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>RailM needs your location to provide navigation features.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>RailM needs your location to provide navigation features.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>RailM needs your location to provide navigation features.</string>
-
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>RailM needs your location to provide navigation features.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>RailM needs your location to provide navigation features.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>RailM needs your location to provide navigation features.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -64,6 +62,13 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 </dict>
 </plist>
