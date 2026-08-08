@@ -44,7 +44,7 @@ ifneq ($(filter build build-android build-ios run-debug run-release,$(MAKECMDGOA
   endif
 endif
 
-.PHONY: build build-android build-ios run-debug run-release clean help version
+.PHONY: build build-android build-ios run run-debug run-release clean help version
 
 help:
 	@echo "Usage: make [options] [envs]"
@@ -59,7 +59,7 @@ help:
 	@echo "           GITHUB_RELEASE_URL,"
 	@echo "           MAPBOX_TOKEN]"
 	@echo
-	@echo "    run"
+	@echo "    run                                  Same as run-debug."
 	@echo "    |- run-debug                         Builds and runs app in debug mode."
 	@echo "    |- run-release                       Builds and runs app in release mode."
 	@echo "               [RAILAPI_URL,"
@@ -117,6 +117,8 @@ $(RAILM)/build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app:
         --dart-define=RAILM_APP_VERSION=$(VERSION) \
         --dart-define=GITHUB_RELEASE_URL=$(GITHUB_RELEASE_URL) \
         --dart-define=GITHUB_VERSION_URL=$(GITHUB_VERSION_URL)
+
+run: run-debug
 
 run-debug:
 	$(FLUTTER) run \
