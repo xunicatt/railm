@@ -48,7 +48,11 @@ help:
 	@echo
 	@echo "  INFO: Environment Variables marked with (*) are mandatory."
 
-ifeq ($(RELEASE), yes)
+ifeq ($(RELEASE),yes)
+  ifeq ($(EXTRA_VERSION),dev)
+    $(error EXTRA_VERSION is set to dev)
+  endif
+
   VCODE := $(shell echo $(VERSION) | cut -c2-5)
   CCODE := $(shell date +%y%m)
   BUILDVER := $(shell echo $(VERSION) | cut -d. -f2)
