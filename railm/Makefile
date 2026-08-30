@@ -18,9 +18,9 @@ GITHUB_RELEASE_URL ?=
 TARGETS := \
 	$(BUILD)/railm-android-unsigned-$(VERSION).apk
 
-ifeq ($(shell uname),Darwin)
-  TARGETS += $(BUILD)/railm-ios-unsigned-$(VERSION).ipa
-endif
+# ifeq ($(shell uname),Darwin)
+#  TARGETS += $(BUILD)/railm-ios-unsigned-$(VERSION).ipa
+# endif
 
 ifneq ($(filter build build-android build-ios run-debug run-release,$(MAKECMDGOALS)),)
   ifndef RAILAPI_URL
