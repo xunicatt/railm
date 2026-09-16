@@ -18,7 +18,7 @@ railm (Railway Mobile), pronounced ‘realm,’ is a cross-platform mobile app p
 - **main**: development branch
 - **prod**: production release for deployment (only updated to point releases)
 - **prod-patch**: special branch to apply quick patches on top of prod
-- **releases/vYYMM.xx**: release snapshot branches (only last current and previous snapshots are kept, older release branches will be deleted)
+- **releases/vYYMM.xx**: release snapshot branches (only current and previous snapshots are kept, older release branches will be deleted)
 
 # Build
 ```bash
