@@ -3,13 +3,37 @@
 <!-- Project: railm -->
 <!-- Copyright (c) 2026 xunicatt <contact.aniket.biswas@gmail.com> -->
 
-## v2607.2
+## v2609.0-rc2
+> [!NOTE]
+> A release candidate (RC) is a pre-release version of software that is feature-complete, stable enough for production, and will become the final public release unless significant bugs are discovered. 
 
 #### Changes
+
+- added a check for dev EXTRA_VERSION variant
+- removed: building unsigned .ipa for ios
+
+- railapi: removed unused dependencies
+
+- railm: added showinge errors related to location permissions
+- railm: added experimental support for iPad/Android Tablets
+- railm: added colors to Icons in Live Status panel
+- railm: added a default debug run option in Makefile
+- railm: updated flutter version to 3.44.9
+- railm: updated dependencies
+- railm: optimzed UI width for wide devices
+- railm: fixed bugs related to deadlocks
+- railm: fixed text alignment in Settings
+- railm: removed deprecated plugin TravelDelay
+
+**Full Changelog**: https://github.com/xunicatt/railm/compare/v2607.2...v2609.0-rc1
+
+## v2607.2
 
 > [!NOTE]
 > This update focuses on improving developer experience, stability and bug fixes
 > while introducing a more secure token passing interface.
+
+#### Changes
 
 - added: LICENSE header to markdown files
 - added: branch description in README.md
