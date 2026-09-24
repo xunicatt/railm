@@ -11,9 +11,7 @@
 
 - added a check for dev EXTRA_VERSION variant
 - removed: building unsigned .ipa for ios
-
 - railapi: removed unused dependencies
-
 - railm: added showinge errors related to location permissions
 - railm: added experimental support for iPad/Android Tablets
 - railm: added colors to Icons in Live Status panel
